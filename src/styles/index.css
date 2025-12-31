@@ -1,0 +1,12 @@
+/**
+ * Global Styles Index
+ * Import this single file in index.tsx
+ */
+
+/* Fonts */
+@import "./font.geist.css";
+@import "./font.geist-mono.css";
+@import "./font.kalam.css";
+
+/* Reset */
+@import "./reset.css";

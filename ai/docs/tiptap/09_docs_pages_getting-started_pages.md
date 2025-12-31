@@ -1,0 +1,23 @@
+[Pages](/docs/pages/getting-started/overview)
+
+Copy markdownAsk AI
+
+# Pages
+
+Available in Team planAlpha
+
+Tiptap Pages is a powerful extension that transforms your editing experience from a traditional single-block editor into a sophisticated page-based interface.
+
+With Pages, you can create documents that feel more like real pages, complete with proper margins, page breaks, and layout controls. This makes it perfect for creating documents that need to maintain a professional, page-based structure – whether you're working on reports, articles, or any other content that benefits from a traditional document format.
+
+Key features of Tiptap Pages include:
+
+-   Page-based layout with proper margins and spacing
+-   Visual page breaks for better content organization
+-   Document-like editing experience
+-   Seamless integration with other Tiptap extensions
+-   Familiar interface similar to popular word processors
+
+We are continuously improving the pages extension. Support for more extensions and other complex features are in active development.
+
+[Next upInstall](/docs/pages/getting-started/install)

@@ -1,0 +1,144 @@
+Version: v8
+
+On this page
+
+# @capacitor/screen-reader
+
+The Screen Reader API provides access to TalkBack/VoiceOver/etc. and provides simple text-to-speech capabilities for visual accessibility.
+
+## Install[​](#install "Direct link to Install")
+
+```
+npm install @capacitor/screen-readernpx cap sync
+```
+
+## Example[​](#example "Direct link to Example")
+
+```
+import { ScreenReader } from '@capacitor/screen-reader';ScreenReader.addListener('stateChange', ({ value }) => {  console.log(`Screen reader is now ${value ? 'on' : 'off'}`);});const checkScreenReaderEnabled = async () => {  const { value } = await ScreenReader.isEnabled();  console.log('Voice over enabled? ' + value);};const sayHello = async () => {  await ScreenReader.speak({ value: 'Hello World!' });};
+```
+
+## API[​](#api "Direct link to API")
+
+-   [`isEnabled()`](#isenabled)
+-   [`speak(...)`](#speak)
+-   [`addListener('stateChange', ...)`](#addlistenerstatechange-)
+-   [`removeAllListeners()`](#removealllisteners)
+-   [Interfaces](#interfaces)
+-   [Type Aliases](#type-aliases)
+
+### isEnabled()[​](#isenabled "Direct link to isEnabled()")
+
+```
+isEnabled() => Promise<{ value: boolean; }>
+```
+
+Whether a Screen Reader is currently active.
+
+This method is not supported on web (it is not possible to detect Screen Readers).
+
+**Returns:** `Promise<{ value: boolean; }>`
+
+**Since:** 1.0.0
+
+* * *
+
+### speak(...)[​](#speak "Direct link to speak(...)")
+
+```
+speak(options: SpeakOptions) => Promise<void>
+```
+
+Text-to-Speech functionality.
+
+This function will only work if a Screen Reader is currently active.
+
+On web, browsers must support the [SpeechSynthesis API](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis), or this method will throw an error.
+
+For more text-to-speech capabilities, please see the [Capacitor Community Text-to-Speech plugin](https://github.com/capacitor-community/text-to-speech).
+
+| Param | Type |
+| --- | --- |
+| **`options`** |
+```
+SpeakOptions
+```
+
+ |
+
+**Since:** 1.0.0
+
+* * *
+
+### addListener('stateChange', ...)[​](#addlistenerstatechange- "Direct link to addListener('stateChange', ...)")
+
+```
+addListener(eventName: 'stateChange', listener: StateChangeListener) => Promise<PluginListenerHandle>
+```
+
+Add a listener for when the screen reader is turned on or off.
+
+This event used to be named `'accessibilityScreenReaderStateChange'`.
+
+This method is not supported on web (it is not possible to detect Screen Readers).
+
+| Param | Type |
+| --- | --- |
+| **`eventName`** | `'stateChange'` |
+| **`listener`** |
+```
+StateChangeListener
+```
+
+ |
+
+**Returns:**
+
+```
+Promise<PluginListenerHandle>
+```
+
+**Since:** 1.0.0
+
+* * *
+
+### removeAllListeners()[​](#removealllisteners "Direct link to removeAllListeners()")
+
+```
+removeAllListeners() => Promise<void>
+```
+
+Remove all the listeners that are attached to this plugin.
+
+**Since:** 1.0.0
+
+* * *
+
+### Interfaces[​](#interfaces "Direct link to Interfaces")
+
+#### SpeakOptions[​](#speakoptions "Direct link to SpeakOptions")
+
+| Prop | Type | Description | Since |
+| --- | --- | --- | --- |
+| **`value`** | `string` | The text to speak. | 1.0.0 |
+| **`language`** | `string` | The language to speak the text in, as its [ISO 639-1 Code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g.: "en"). This option is only supported on Android. | 1.0.0 |
+
+#### PluginListenerHandle[​](#pluginlistenerhandle "Direct link to PluginListenerHandle")
+
+| Prop | Type |
+| --- | --- |
+| **`remove`** | `() => Promise<void>` |
+
+#### ScreenReaderState[​](#screenreaderstate "Direct link to ScreenReaderState")
+
+| Prop | Type | Description | Since |
+| --- | --- | --- | --- |
+| **`value`** | `boolean` | Whether a Screen Reader is currently active. | 1.0.0 |
+
+### Type Aliases[​](#type-aliases "Direct link to Type Aliases")
+
+#### StateChangeListener[​](#statechangelistener "Direct link to StateChangeListener")
+
+```
+(state: ScreenReaderState): void
+```

@@ -1,0 +1,189 @@
+Version: v8
+
+On this page
+
+# @capacitor/splash-screen
+
+The Splash Screen API provides methods for showing or hiding a Splash image.
+
+## Install[​](#install "Direct link to Install")
+
+```
+npm install @capacitor/splash-screennpx cap sync
+```
+
+### Android 12 Splash Screen API[​](#android-12-splash-screen-api "Direct link to Android 12 Splash Screen API")
+
+_**This only affects the launch splash screen and is not used when utilizing the programmatic `show()` method.**_
+
+Capacitor 4 uses the **[Android 12 Splash Screen API](https://developer.android.com/guide/topics/ui/splash-screen)** and the `androidx.core:core-splashscreen` compatibility library to make it work on Android 11 and below.
+
+The compatibility library can be disabled by changing the parent of `AppTheme.NoActionBarLaunch` from `Theme.SplashScreen` to `AppTheme.NoActionBar` in `android/app/src/main/res/values/styles.xml`. The Android 12 Splash Screen API can't be disabled on Android 12+ as it's part of the Android OS.
+
+```
+<style name="AppTheme.NoActionBarLaunch" parent="AppTheme.NoActionBar">    <item name="android:background">@drawable/splash</item></style>
+```
+
+**NOTE**: On Android 12 and Android 12L devices the Splash Screen image is not showing when launched from third party launchers such as Nova Launcher, MIUI, Realme Launcher, OPPO Launcher, etc., from app info in Settings App, or from IDEs such as Android Studio. **[Google Issue Tracker](https://issuetracker.google.com/issues/205021357)** **[Google Issue Tracker](https://issuetracker.google.com/issues/207386164)** Google has fixed those problems on Android 13 but they won't backport the fixes to Android 12 and Android 12L. Launcher related issues might get fixed by a launcher update. If you still find issues related to the Splash Screen on Android 13, please, report them to [Google](https://issuetracker.google.com/).
+
+## Example[​](#example "Direct link to Example")
+
+```
+import { SplashScreen } from '@capacitor/splash-screen';// Hide the splash (you should do this on app launch)await SplashScreen.hide();// Show the splash for an indefinite amount of time:await SplashScreen.show({  autoHide: false,});// Show the splash for two seconds and then automatically hide it:await SplashScreen.show({  showDuration: 2000,  autoHide: true,});
+```
+
+## Hiding the Splash Screen[​](#hiding-the-splash-screen "Direct link to Hiding the Splash Screen")
+
+By default, the Splash Screen is set to automatically hide after 500 ms.
+
+If you want to be sure the splash screen never disappears before your app is ready, set `launchAutoHide` to `false`; the splash screen will then stay visible until manually hidden. For the best user experience, your app should call `hide()` as soon as possible.
+
+If, instead, you want to show the splash screen for a fixed amount of time, set `launchShowDuration` in your [Capacitor configuration file](https://capacitorjs.com/docs/config).
+
+## Background Color[​](#background-color "Direct link to Background Color")
+
+In certain conditions, especially if the splash screen does not fully cover the device screen, it might happen that the app screen is visible around the corners (due to transparency). Instead of showing a transparent color, you can set a `backgroundColor` to cover those areas.
+
+Possible values for `backgroundColor` are either `#RRGGBB` or `#RRGGBBAA`.
+
+## Spinner[​](#spinner "Direct link to Spinner")
+
+If you want to show a spinner on top of the splash screen, set `showSpinner` to `true` in your [Capacitor configuration file](https://capacitorjs.com/docs/config).
+
+You can customize the appearance of the spinner with the following configuration.
+
+For Android, `androidSpinnerStyle` has the following options:
+
+-   `horizontal`
+-   `small`
+-   `large` (default)
+-   `inverse`
+-   `smallInverse`
+-   `largeInverse`
+
+For iOS, `iosSpinnerStyle` has the following options:
+
+-   `large` (default)
+-   `small`
+
+To set the color of the spinner use `spinnerColor`, values are either `#RRGGBB` or `#RRGGBBAA`.
+
+## Configuration[​](#configuration "Direct link to Configuration")
+
+These config values are available:
+
+| Prop | Type | Description | Default | Since |
+| --- | --- | --- | --- | --- |
+| **`launchShowDuration`** | `number` | How long to show the launch splash screen when autoHide is enabled (in ms) | `500` | 1.0.0 |
+| **`launchAutoHide`** | `boolean` | Whether to auto hide the splash after launchShowDuration. | `true` | 1.0.0 |
+| **`launchFadeOutDuration`** | `number` | Duration for the fade out animation of the launch splash screen (in ms) Only available for Android, when using the Android 12 Splash Screen API. | `200` | 4.2.0 |
+| **`backgroundColor`** | `string` | Color of the background of the Splash Screen in hex format, #RRGGBB or #RRGGBBAA. Doesn't work if `useDialog` is true or on launch when using the Android 12 API. |  | 1.0.0 |
+| **`androidSplashResourceName`** | `string` | Name of the resource to be used as Splash Screen. Doesn't work on launch when using the Android 12 API. Only available on Android. | `splash` | 1.0.0 |
+| **`androidScaleType`** | `'CENTER' | 'CENTER_CROP' | 'CENTER_INSIDE' | 'FIT_CENTER' | 'FIT_END' | 'FIT_START' | 'FIT_XY' | 'MATRIX'` | The [ImageView.ScaleType](https://developer.android.com/reference/android/widget/ImageView.ScaleType) used to scale the Splash Screen image. Doesn't work if `useDialog` is true or on launch when using the Android 12 API. Only available on Android. | `FIT_XY` | 1.0.0 |
+| **`showSpinner`** | `boolean` | Show a loading spinner on the Splash Screen. Doesn't work if `useDialog` is true or on launch when using the Android 12 API. |  | 1.0.0 |
+| **`androidSpinnerStyle`** | `'horizontal' | 'small' | 'large' | 'inverse' | 'smallInverse' | 'largeInverse'` | Style of the Android spinner. Doesn't work if `useDialog` is true or on launch when using the Android 12 API. | `large` | 1.0.0 |
+| **`iosSpinnerStyle`** | `'small' | 'large'` | Style of the iOS spinner. Doesn't work if `useDialog` is true. Only available on iOS. | `large` | 1.0.0 |
+| **`spinnerColor`** | `string` | Color of the spinner in hex format, #RRGGBB or #RRGGBBAA. Doesn't work if `useDialog` is true or on launch when using the Android 12 API. |  | 1.0.0 |
+| **`splashFullScreen`** | `boolean` | Hide the status bar on the Splash Screen. Doesn't work on launch when using the Android 12 API. Only available on Android. |  | 1.0.0 |
+| **`splashImmersive`** | `boolean` | Hide the status bar and the software navigation buttons on the Splash Screen. Doesn't work on launch when using the Android 12 API. Only available on Android. |  | 1.0.0 |
+| **`layoutName`** | `string` | If `useDialog` is set to true, configure the Dialog layout. If `useDialog` is not set or false, use a layout instead of the ImageView. Doesn't work on launch when using the Android 12 API. Only available on Android. |  | 1.1.0 |
+| **`useDialog`** | `boolean` | Use a Dialog instead of an ImageView. If `layoutName` is not configured, it will use a layout that uses the splash image as background. Doesn't work on launch when using the Android 12 API. Only available on Android. |  | 1.1.0 |
+
+### Examples[​](#examples "Direct link to Examples")
+
+In `capacitor.config.json`:
+
+```
+{  "plugins": {    "SplashScreen": {      "launchShowDuration": 3000,      "launchAutoHide": true,      "launchFadeOutDuration": 3000,      "backgroundColor": "#ffffffff",      "androidSplashResourceName": "splash",      "androidScaleType": "CENTER_CROP",      "showSpinner": true,      "androidSpinnerStyle": "large",      "iosSpinnerStyle": "small",      "spinnerColor": "#999999",      "splashFullScreen": true,      "splashImmersive": true,      "layoutName": "launch_screen",      "useDialog": true    }  }}
+```
+
+In `capacitor.config.ts`:
+
+```
+/// <reference types="@capacitor/splash-screen" />import { CapacitorConfig } from '@capacitor/cli';const config: CapacitorConfig = {  plugins: {    SplashScreen: {      launchShowDuration: 3000,      launchAutoHide: true,      launchFadeOutDuration: 3000,      backgroundColor: "#ffffffff",      androidSplashResourceName: "splash",      androidScaleType: "CENTER_CROP",      showSpinner: true,      androidSpinnerStyle: "large",      iosSpinnerStyle: "small",      spinnerColor: "#999999",      splashFullScreen: true,      splashImmersive: true,      layoutName: "launch_screen",      useDialog: true,    },  },};export default config;
+```
+
+### Android[​](#android "Direct link to Android")
+
+To use splash screen images named something other than `splash.png`, set `androidSplashResourceName` to the new resource name. Additionally, in `android/app/src/main/res/values/styles.xml`, change the resource name in the following block:
+
+```
+<style name="AppTheme.NoActionBarLaunch" parent="AppTheme.NoActionBar">    <item name="android:background">@drawable/NAME</item></style>
+```
+
+### Variables[​](#variables "Direct link to Variables")
+
+This plugin will use the following project variables (defined in your app's `variables.gradle` file):
+
+-   `coreSplashScreenVersion` version of `androidx.core:core-splashscreen` (default: `1.2.0`)
+
+## Example Guides[​](#example-guides "Direct link to Example Guides")
+
+[Adding Your Own Icons and Splash Screen Images ›](https://www.joshmorony.com/adding-icons-splash-screens-launch-images-to-capacitor-projects/)
+
+[Creating a Dynamic/Adaptable Splash Screen for Capacitor (Android) ›](https://www.joshmorony.com/creating-a-dynamic-universal-splash-screen-for-capacitor-android/)
+
+## API[​](#api "Direct link to API")
+
+-   [`show(...)`](#show)
+-   [`hide(...)`](#hide)
+-   [Interfaces](#interfaces)
+
+### show(...)[​](#show "Direct link to show(...)")
+
+```
+show(options?: ShowOptions | undefined) => Promise<void>
+```
+
+Show the splash screen
+
+| Param | Type |
+| --- | --- |
+| **`options`** |
+```
+ShowOptions
+```
+
+ |
+
+**Since:** 1.0.0
+
+* * *
+
+### hide(...)[​](#hide "Direct link to hide(...)")
+
+```
+hide(options?: HideOptions | undefined) => Promise<void>
+```
+
+Hide the splash screen
+
+| Param | Type |
+| --- | --- |
+| **`options`** |
+```
+HideOptions
+```
+
+ |
+
+**Since:** 1.0.0
+
+* * *
+
+### Interfaces[​](#interfaces "Direct link to Interfaces")
+
+#### ShowOptions[​](#showoptions "Direct link to ShowOptions")
+
+| Prop | Type | Description | Default | Since |
+| --- | --- | --- | --- | --- |
+| **`autoHide`** | `boolean` | Whether to auto hide the splash after showDuration |  | 1.0.0 |
+| **`fadeInDuration`** | `number` | How long (in ms) to fade in. | `200` | 1.0.0 |
+| **`fadeOutDuration`** | `number` | How long (in ms) to fade out. | `200` | 1.0.0 |
+| **`showDuration`** | `number` | How long to show the splash screen when autoHide is enabled (in ms) | `3000` | 1.0.0 |
+
+#### HideOptions[​](#hideoptions "Direct link to HideOptions")
+
+| Prop | Type | Description | Default | Since |
+| --- | --- | --- | --- | --- |
+| **`fadeOutDuration`** | `number` | How long (in ms) to fade out. On Android, if using the Android 12 Splash Screen API, it's not being used. Use launchFadeOutDuration configuration option instead. | `200` | 1.0.0 |

@@ -1,0 +1,52 @@
+{
+    // Editor
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.codeActionsOnSave": {
+        "quickfix.biome": "explicit",
+        "source.organizeImports.biome": "explicit"
+    },
+    // Files
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/node_modules": true,
+        "**/bun.lock": true,
+        "**/.capacitor": true,
+        "**/dist": true,
+        "**/dist-ssr": true
+    },
+    // Search
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bun.lockb": true,
+        "**/dist": true,
+        "**/.capacitor": true
+    },
+    // TypeScript
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    // CSS
+    "[css]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    // Disable default formatters
+    "[javascript]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    }
+}
