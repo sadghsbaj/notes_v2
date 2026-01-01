@@ -87,6 +87,16 @@ globalStyle(`${input}::selection`, {
     color: "#ffffff",
 });
 
+// Hidden span for measuring text width (same font as input)
+export const measureSpan = style({
+    position: "absolute",
+    visibility: "hidden",
+    whiteSpace: "pre",
+    fontSize: typography.fontSize.sm,
+    fontFamily: typography.fontFamily.mono,
+    fontWeight: typography.fontWeight.medium,
+});
+
 // =============================================================================
 // Ghost Text – Completion (inline after input)
 // =============================================================================
