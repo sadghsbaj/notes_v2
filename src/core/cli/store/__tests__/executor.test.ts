@@ -12,68 +12,79 @@ const slot = (value: string): Slot => ({
     isQuoted: false,
 });
 
+// biome-ignore lint/suspicious/noExplicitAny: Test helper for dynamic args access
+type Args = Record<string, any>;
+
 describe("executor", () => {
     describe("parseArgs", () => {
         it("parses string param", () => {
             const params: Param[] = [{ name: "text", type: "string", optional: false }];
             const slots = [slot("hello")];
             const result = parseArgs(params, slots);
+            const args = result.args as Args;
             expect(result.error).toBeNull();
-            expect(result.args.text).toBe("hello");
+            expect(args.text).toBe("hello");
         });
 
         it("parses number param with dot", () => {
             const params: Param[] = [{ name: "num", type: "number", optional: false }];
             const slots = [slot("5.7")];
             const result = parseArgs(params, slots);
+            const args = result.args as Args;
             expect(result.error).toBeNull();
-            expect(result.args.num).toBe(5.7);
+            expect(args.num).toBe(5.7);
         });
 
         it("parses number param with comma", () => {
             const params: Param[] = [{ name: "num", type: "number", optional: false }];
             const slots = [slot("5,7")];
             const result = parseArgs(params, slots);
+            const args = result.args as Args;
             expect(result.error).toBeNull();
-            expect(result.args.num).toBe(5.7);
+            expect(args.num).toBe(5.7);
         });
 
         it("parses boolean param true", () => {
             const params: Param[] = [{ name: "flag", type: "boolean", optional: false }];
             const slots = [slot("true")];
             const result = parseArgs(params, slots);
+            const args = result.args as Args;
             expect(result.error).toBeNull();
-            expect(result.args.flag).toBe(true);
+            expect(args.flag).toBe(true);
         });
 
         it("parses boolean param 1", () => {
             const params: Param[] = [{ name: "flag", type: "boolean", optional: false }];
             const slots = [slot("1")];
             const result = parseArgs(params, slots);
-            expect(result.args.flag).toBe(true);
+            const args = result.args as Args;
+            expect(args.flag).toBe(true);
         });
 
         it("parses boolean param ja", () => {
             const params: Param[] = [{ name: "flag", type: "boolean", optional: false }];
             const slots = [slot("ja")];
             const result = parseArgs(params, slots);
-            expect(result.args.flag).toBe(true);
+            const args = result.args as Args;
+            expect(args.flag).toBe(true);
         });
 
         it("uses default for missing optional param", () => {
             const params: Param[] = [{ name: "opt", type: "string", optional: true, default: "default" }];
             const slots: Slot[] = [];
             const result = parseArgs(params, slots);
+            const args = result.args as Args;
             expect(result.error).toBeNull();
-            expect(result.args.opt).toBe("default");
+            expect(args.opt).toBe("default");
         });
 
         it("uses _ placeholder to skip to default", () => {
             const params: Param[] = [{ name: "opt", type: "string", optional: true, default: "default" }];
             const slots = [slot("_")];
             const result = parseArgs(params, slots);
+            const args = result.args as Args;
             expect(result.error).toBeNull();
-            expect(result.args.opt).toBe("default");
+            expect(args.opt).toBe("default");
         });
 
         it("returns error for missing required param", () => {
@@ -97,9 +108,10 @@ describe("executor", () => {
             ];
             const slots = [slot("hello"), slot("42")];
             const result = parseArgs(params, slots);
+            const args = result.args as Args;
             expect(result.error).toBeNull();
-            expect(result.args.a).toBe("hello");
-            expect(result.args.b).toBe(42);
+            expect(args.a).toBe("hello");
+            expect(args.b).toBe(42);
         });
     });
 });
