@@ -19,6 +19,7 @@ class ActionRegistry {
             aliases: definition.aliases ?? [],
             description: definition.description ?? "",
             params: definition.params ?? [],
+            confirm: definition.confirm ?? false,
             handler: definition.handler,
         };
 

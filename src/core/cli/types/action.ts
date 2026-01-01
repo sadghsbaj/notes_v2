@@ -7,6 +7,17 @@ import { z } from "zod";
 export type CommandGroup = "filesystem" | "page" | "view" | "util";
 
 // =============================================================================
+// Confirmation Types
+// =============================================================================
+
+/** When a command needs user confirmation before executing */
+export type ConfirmationType =
+    | "delete" // Deleting files/pages
+    | "overwrite" // Overwriting existing content
+    | "destructive" // Other destructive actions
+    | false; // No confirmation needed
+
+// =============================================================================
 // Parameter Types
 // =============================================================================
 
@@ -42,6 +53,8 @@ export interface ActionDefinition {
     aliases?: string[];
     description?: string;
     params?: Param[];
+    /** If set, command needs inline confirmation before executing */
+    confirm?: ConfirmationType;
     handler: (args: Record<string, unknown>) => void | Promise<void>;
 }
 
@@ -55,5 +68,6 @@ export interface Action {
     aliases: string[];
     description: string;
     params: Param[];
+    confirm: ConfirmationType;
     handler: (args: Record<string, unknown>) => void | Promise<void>;
 }

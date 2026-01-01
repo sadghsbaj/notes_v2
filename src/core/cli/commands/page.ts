@@ -16,9 +16,13 @@ actionRegistry.register({
     group: "page",
     aliases: ["pa"],
     description: "Neue Seite hinzufügen",
-    params: [{ name: "position", type: "number", optional: true, hint: "Position (Standard: Ende)" }],
+    params: [
+        { name: "count", type: "number", optional: true, default: 1, hint: "Anzahl (Standard: 1)" },
+        { name: "pos", type: "number", optional: true, default: -1, hint: "Position (Standard: Ende)" },
+        { name: "height", type: "number", optional: true, default: 1130, hint: "Höhe in px (Standard: 1130)" },
+    ],
     handler: (args) => {
-        console.log("[page-add]", args.position ?? "am Ende");
+        console.log("[page-add]", `${args["count"]}x`, `pos=${args["pos"]}`, `h=${args["height"]}px`);
     },
 });
 
@@ -31,9 +35,10 @@ actionRegistry.register({
     group: "page",
     aliases: ["pd", "page-del"],
     description: "Seite löschen",
+    confirm: "delete",
     params: [{ name: "pages", type: "range", optional: false, hint: "z.B. 1 oder 3-5 oder 1;3;5" }],
     handler: (args) => {
-        console.log("[page-rm]", args.pages);
+        console.log("[page-rm]", args["pages"]);
     },
 });
 
@@ -51,7 +56,7 @@ actionRegistry.register({
         { name: "b", type: "number", optional: false, hint: "Zweite Seite" },
     ],
     handler: (args) => {
-        console.log("[page-swap]", args.a, "↔", args.b);
+        console.log("[page-swap]", args["a"], "↔", args["b"]);
     },
 });
 
@@ -69,7 +74,7 @@ actionRegistry.register({
         { name: "target", type: "number", optional: false, hint: "Zielposition" },
     ],
     handler: (args) => {
-        console.log("[page-mv]", args.pages, "→", args.target);
+        console.log("[page-mv]", args["pages"], "→", args["target"]);
     },
 });
 
@@ -82,9 +87,13 @@ actionRegistry.register({
     group: "page",
     aliases: ["pc"],
     description: "Seiteninhalt löschen",
-    params: [{ name: "pages", type: "range", optional: true, default: ".", hint: "Seiten (Standard: aktuelle)" }],
+    confirm: "destructive",
+    params: [
+        { name: "pages", type: "range", optional: true, default: ".", hint: "Seiten (Standard: aktuelle)" },
+        { name: "what", type: "string", optional: false, hint: "content | bg | all" },
+    ],
     handler: (args) => {
-        console.log("[page-clear]", args.pages);
+        console.log("[page-clear]", args["pages"], `what=${args["what"]}`);
     },
 });
 
@@ -102,25 +111,25 @@ actionRegistry.register({
         { name: "degrees", type: "number", optional: true, default: 90, hint: "90, 180, 270" },
     ],
     handler: (args) => {
-        console.log("[page-rotate]", args.pages, `${args.degrees}°`);
+        console.log("[page-rotate]", args["pages"], `${args["degrees"]}°`);
     },
 });
 
 // =============================================================================
-// page-import - Import Pages from File
+// page-import - Import Pages from File/Scanner
 // =============================================================================
 
 actionRegistry.register({
     id: "page-import",
     group: "page",
     aliases: ["pi"],
-    description: "Seiten aus Datei importieren",
+    description: "Seiten importieren",
     params: [
-        { name: "file", type: "string", optional: false, hint: "PDF oder Bilddatei" },
-        { name: "position", type: "number", optional: true, hint: "Position (Standard: Ende)" },
+        { name: "source", type: "string", optional: false, hint: "fs | scan" },
+        { name: "pos", type: "number", optional: true, default: -1, hint: "Position (Standard: Ende)" },
     ],
     handler: (args) => {
-        console.log("[page-import]", args.file, args.position ?? "am Ende");
+        console.log("[page-import]", `source=${args["source"]}`, `pos=${args["pos"]}`);
     },
 });
 
@@ -135,9 +144,9 @@ actionRegistry.register({
     description: "Seiten exportieren",
     params: [
         { name: "pages", type: "range", optional: true, default: ".", hint: "Seiten (Standard: alle)" },
-        { name: "file", type: "string", optional: false, hint: "Zieldatei (PDF)" },
+        { name: "what", type: "string", optional: true, default: "all", hint: "all | content | bg" },
     ],
     handler: (args) => {
-        console.log("[page-export]", args.pages, "→", args.file);
+        console.log("[page-export]", args["pages"], `what=${args["what"]}`);
     },
 });
