@@ -14,13 +14,14 @@ import type { ParamHelp, ParamType, ValidationResult } from "../types/action";
 /**
  * Validate a number input
  * Accepts integers and decimals with . or , as separator
+ * Returns normalized: the parsed number
  */
 export function validateNumber(value: string): ValidationResult {
     const normalized = value.replace(",", ".");
     if (!/^-?\d+(\.\d+)?$/.test(normalized)) {
         return { valid: false, error: "Keine gültige Zahl" };
     }
-    return { valid: true };
+    return { valid: true, normalized: Number.parseFloat(normalized) };
 }
 
 /**

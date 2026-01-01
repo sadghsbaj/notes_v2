@@ -52,33 +52,35 @@ export function parseArgs(params: ParamRuntime[], slots: Slot[]): ParsedArgs {
 
         // Validate the value
         // Use custom validator if provided, otherwise use type validator
+        let validationResult: { valid: boolean; error?: string; normalized?: unknown };
+
         if (param.validate) {
-            const result = param.validate(rawValue, param.name);
-            if (!result.valid) {
-                error = result.error ?? `Ungültig: ${param.name}`;
+            validationResult = param.validate(rawValue, param.name);
+            if (!validationResult.valid) {
+                error = validationResult.error ?? `Ungültig: ${param.name}`;
                 break;
             }
         } else {
-            const result = validateParam(rawValue, param.type, param.help);
-            if (!result.valid) {
-                error = `${param.name}: ${result.error}`;
+            validationResult = validateParam(rawValue, param.type, param.help);
+            if (!validationResult.valid) {
+                error = `${param.name}: ${validationResult.error}`;
                 break;
             }
         }
 
-        // Parse based on type
-        switch (param.type) {
-            case "number": {
-                const numStr = rawValue.replace(",", ".");
-                args[param.name] = Number.parseFloat(numStr);
-                break;
+        // Use normalized value if available, otherwise parse based on type
+        if (validationResult.normalized !== undefined) {
+            args[param.name] = validationResult.normalized;
+        } else {
+            // Fallback parsing for types without normalization
+            switch (param.type) {
+                case "boolean":
+                    args[param.name] = rawValue.toLowerCase() === "true" || rawValue === "1" || rawValue === "ja";
+                    break;
+                default:
+                    // range, path, enum, string - keep as string
+                    args[param.name] = rawValue;
             }
-            case "boolean":
-                args[param.name] = rawValue.toLowerCase() === "true" || rawValue === "1" || rawValue === "ja";
-                break;
-            default:
-                // range, path, enum, string - keep as string
-                args[param.name] = rawValue;
         }
 
         if (error) break;

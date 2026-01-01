@@ -31,6 +31,8 @@ export type ParamType = z.infer<typeof ParamType>;
 export interface ValidationResult {
     valid: boolean;
     error?: string;
+    /** Normalized/parsed value from validator (avoids duplicate processing in executor) */
+    normalized?: unknown;
 }
 
 /** Custom validator function signature */

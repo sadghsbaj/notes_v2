@@ -83,9 +83,9 @@ CLI ist das primäre Interface – fertig implementiert.
 - [x] **GhostText Type Safety** – Discriminated Union verwenden ✅
   - Refactored: Jeder Mode hat nur seine relevanten Felder
   - TypeScript erzwingt jetzt Mode-Check vor Zugriff auf mode-spezifische Felder
-- [ ] **Number Parsing Deduplizierung** – Normalisierung nicht doppelt machen
-  - Validator + Executor machen beide `replace(",", ".")`
-  - ValidationResult sollte normalisierten Wert zurückgeben
+- [x] **Number Parsing Deduplizierung** – Normalisierung nicht doppelt machen ✅
+  - `ValidationResult` hat jetzt `normalized` Feld
+  - `validateNumber` gibt parsed number zurück, Executor nutzt es direkt
 - [ ] **fuzzysort für Param Matching** – isSimilar() durch fuzzysort ersetzen
   - Konsistente Fuzzy-Logik wie bei Commands
   - Bessere Typo-Toleranz
