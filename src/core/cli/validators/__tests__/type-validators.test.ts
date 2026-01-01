@@ -72,10 +72,15 @@ describe("Type Validators", () => {
             expect(validateRange("1;3-5;7").valid).toBe(true);
         });
 
+        it("accepts negative ranges", () => {
+            expect(validateRange("-1").valid).toBe(true); // Last item
+            expect(validateRange("-3--1").valid).toBe(true); // Last 3 items
+            expect(validateRange("1--5").valid).toBe(true); // From 1 to -5
+        });
+
         it("rejects invalid ranges", () => {
             expect(validateRange("1,2").valid).toBe(false); // comma instead of semicolon
             expect(validateRange("abc").valid).toBe(false);
-            expect(validateRange("1--5").valid).toBe(false);
             expect(validateRange(";").valid).toBe(false);
         });
     });

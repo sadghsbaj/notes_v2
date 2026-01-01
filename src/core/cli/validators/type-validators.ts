@@ -39,9 +39,10 @@ export function validateBoolean(value: string): ValidationResult {
 /**
  * Validate a range input
  * Accepts: single number (1), range (1-5), list (1;3;5), or mixed (1;3-5;7)
+ * Supports negative numbers: -1 (last), -2 (second-to-last), etc.
  */
 export function validateRange(value: string): ValidationResult {
-    // Allow: digits, semicolons, and hyphens (for ranges)
+    // Allow: digits, semicolons, hyphens (for ranges and negative numbers)
     // Each segment must be either a number or a range (number-number)
     const segments = value.split(";");
 
@@ -51,21 +52,18 @@ export function validateRange(value: string): ValidationResult {
             return { valid: false, error: "Leeres Segment im Range" };
         }
 
-        // Check if it's a range (e.g., "3-5")
-        if (trimmed.includes("-")) {
-            const parts = trimmed.split("-");
-            if (parts.length !== 2) {
-                return { valid: false, error: `Ungültiger Range: ${trimmed}` };
-            }
-            const [start, end] = parts;
-            if (!/^\d+$/.test(start ?? "") || !/^\d+$/.test(end ?? "")) {
-                return { valid: false, error: `Ungültige Zahlen im Range: ${trimmed}` };
-            }
-        } else {
-            // Single number
-            if (!/^\d+$/.test(trimmed)) {
-                return { valid: false, error: `Keine Zahl: ${trimmed}` };
-            }
+        // Check if it's a span (e.g., "3-5", "-3--1")
+        // Pattern: number, dash, number (where numbers can be negative)
+        const spanMatch = trimmed.match(/^(-?\d+)-(-?\d+)$/);
+
+        if (spanMatch) {
+            // Valid span - both parts are numbers
+            continue;
+        }
+
+        // Single number (positive or negative)
+        if (!/^-?\d+$/.test(trimmed)) {
+            return { valid: false, error: `Keine Zahl: ${trimmed}` };
         }
     }
 

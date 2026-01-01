@@ -17,6 +17,9 @@ export * from "./registry";
 // Validators
 export * from "./validators";
 
+// Completion
+export * from "./completion";
+
 // Store
 export * from "./store";
 

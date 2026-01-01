@@ -69,6 +69,33 @@ CLI ist das primäre Interface – fertig implementiert.
 - [x] **Param Completion** – Tab-Completion für Parameter (enum options, paths)
 - [ ] **AI Command** – `ai "prompt" [fast|think]` mit Gemini-Integration
 
+### 1.7 CLI Refactoring & Code Quality
+
+**Kritische Bugs:**
+- [x] **Range Validator Bug** – Negative Zahlen erlauben (`-?\d+` statt `\d+`) ✅
+  - Problem: `-1` für "last page" wird aktuell rejected
+
+**Refactoring:**
+- [x] **derived.ts modularisieren** – Completion helpers auslagern ✅
+  - Datei ist 274 Zeilen, zu viele Concerns gemischt
+  - Neue Datei: `core/cli/completion/param-matcher.ts`
+  - Funktionen: `findParamMatch`, `isSimilar`, `getParamOptions`
+- [ ] **GhostText Type Safety** – Discriminated Union verwenden
+  - Aktuell: Alle Felder optional, kann zu Invalid States führen
+  - Ziel: Type-safe per Mode (command-completion, command-replacement, params, none)
+- [ ] **Number Parsing Deduplizierung** – Normalisierung nicht doppelt machen
+  - Validator + Executor machen beide `replace(",", ".")`
+  - ValidationResult sollte normalisierten Wert zurückgeben
+- [ ] **fuzzysort für Param Matching** – isSimilar() durch fuzzysort ersetzen
+  - Konsistente Fuzzy-Logik wie bei Commands
+  - Bessere Typo-Toleranz
+- [ ] **Param Types vereinfachen** – ParamDefinition vs ParamRuntime klären
+  - Drei ähnliche Types: Param, ParamDefinition, ParamRuntime
+  - Verwirrend, warum ParamDefinition UND ParamRuntime?
+- [ ] **Help Tooltip Positioning** – Dynamische Charakterbreite statt 4px magic number
+  - Bei verschiedenen DPI/Fonts könnte 4px falsch sein
+  - `charWidth = measureRef.offsetWidth / textLength`
+
 ---
 
 ## Phase 2 – Filesystem (S011)
