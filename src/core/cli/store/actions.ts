@@ -27,6 +27,7 @@ export function createCliActions(state: () => CliState, setState: Setter<CliStat
             input: value,
             cursorPosition: cursor ?? value.length,
             historyIndex: -1,
+            inputDraft: null,
             selectedSuggestionIndex: 0,
             errorMessage: null,
         }));
@@ -62,11 +63,16 @@ export function createCliActions(state: () => CliState, setState: Setter<CliStat
         setState((s) => {
             const hist = s.history;
             if (hist.length === 0) return s;
+
+            // Save current input as draft when first entering history
+            const draft = s.historyIndex === -1 ? s.input : s.inputDraft;
             const newIndex = s.historyIndex === -1 ? hist.length - 1 : Math.max(0, s.historyIndex - 1);
             const entry = hist[newIndex] ?? "";
+
             return {
                 ...s,
                 historyIndex: newIndex,
+                inputDraft: draft,
                 input: entry,
                 cursorPosition: entry.length,
             };
@@ -77,10 +83,21 @@ export function createCliActions(state: () => CliState, setState: Setter<CliStat
         setState((s) => {
             const hist = s.history;
             if (s.historyIndex === -1) return s;
+
             const newIndex = s.historyIndex + 1;
+
+            // Exiting history navigation - restore draft
             if (newIndex >= hist.length) {
-                return { ...s, historyIndex: -1, input: "", cursorPosition: 0 };
+                const draft = s.inputDraft ?? "";
+                return {
+                    ...s,
+                    historyIndex: -1,
+                    inputDraft: null,
+                    input: draft,
+                    cursorPosition: draft.length,
+                };
             }
+
             const entry = hist[newIndex] ?? "";
             return {
                 ...s,

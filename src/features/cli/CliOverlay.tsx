@@ -56,7 +56,10 @@ export function CliOverlay() {
                 break;
             case "ArrowUp":
                 e.preventDefault();
-                if (cliStore.suggestions().length > 0 && cliStore.isCommandSlot()) {
+                // History browsing takes priority over suggestion selection
+                if (cliStore.state().historyIndex !== -1) {
+                    cliStore.historyUp();
+                } else if (cliStore.suggestions().length > 0 && cliStore.isCommandSlot()) {
                     cliStore.selectPrevSuggestion();
                 } else {
                     cliStore.historyUp();
@@ -64,7 +67,10 @@ export function CliOverlay() {
                 break;
             case "ArrowDown":
                 e.preventDefault();
-                if (cliStore.suggestions().length > 0 && cliStore.isCommandSlot()) {
+                // History browsing takes priority over suggestion selection
+                if (cliStore.state().historyIndex !== -1) {
+                    cliStore.historyDown();
+                } else if (cliStore.suggestions().length > 0 && cliStore.isCommandSlot()) {
                     cliStore.selectNextSuggestion();
                 } else {
                     cliStore.historyDown();
@@ -135,8 +141,8 @@ export function CliOverlay() {
                         <span class={styles.suggestionBadge}>→ {ghost().text}</span>
                     </Show>
 
-                    {/* Param hints */}
-                    <Show when={ghost().mode === "params"}>
+                    {/* Param hints - hidden when error is showing */}
+                    <Show when={ghost().mode === "params" && !cliStore.errorMessage()}>
                         <span class={styles.paramHints}>
                             <For each={ghost().paramNames}>
                                 {(name, idx) => (

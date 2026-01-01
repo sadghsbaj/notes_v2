@@ -1,4 +1,4 @@
-import { createMemo, createSignal } from "solid-js";
+import { createSignal } from "solid-js";
 
 // =============================================================================
 // CLI State Types
@@ -15,6 +15,8 @@ export interface CliState {
     history: string[];
     /** Current position in history (-1 = not browsing) */
     historyIndex: number;
+    /** Draft input saved when entering history navigation */
+    inputDraft: string | null;
     /** Selected suggestion index */
     selectedSuggestionIndex: number;
     /** Error message to display */
@@ -27,6 +29,7 @@ export const initialCliState: CliState = {
     isOpen: false,
     history: [],
     historyIndex: -1,
+    inputDraft: null,
     selectedSuggestionIndex: 0,
     errorMessage: null,
 };

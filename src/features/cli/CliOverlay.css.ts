@@ -179,7 +179,11 @@ export const errorMessage = style({
     flexShrink: 0,
     fontFamily: typography.fontFamily.mono,
     fontSize: typography.fontSize.xs,
-    color: "#dc2626",
+    fontWeight: typography.fontWeight.medium,
+    color: "hsl(0, 72%, 60%)", // Red 500
+    backgroundColor: "hsla(0, 72%, 50%, 0.12)", // Subtle red bg
+    padding: `4px ${spacing.sm}`,
+    borderRadius: radius.sm,
     whiteSpace: "nowrap",
 });
 

@@ -59,6 +59,14 @@ CLI ist das primäre Interface – fertig implementiert.
 - [x] Unit Tests (62 tests passing)
   - slot-parser, range-parser, fuzzy, math-eval, executor
 
+### 1.6 CLI Polish & Extensions
+
+- [x] **History Draft** – Unabgeschickten Input bei History-Navigation speichern
+- [x] **Error UX** – Bei Fehler Param-Pillen ausblenden, nur Error zeigen
+- [ ] **Type Validators** – Zentrale Validatoren für range, path, enum etc.
+- [ ] **Help Tooltip** – `?` als Param zeigt floating Hilfe (z.B. `fs|scan`)
+- [ ] **AI Command** – `ai "prompt" [fast|think]` mit Gemini-Integration
+
 ---
 
 ## Phase 2 – Filesystem (S011)
