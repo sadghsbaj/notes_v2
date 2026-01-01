@@ -1,5 +1,5 @@
 import { type SearchResult, getBestMatch, searchActions } from "../search/fuzzy";
-import type { Action, ActionDefinition, ParamRuntime } from "../types/action";
+import type { Action, ActionDefinition } from "../types/action";
 
 // =============================================================================
 // Action Registry
@@ -16,7 +16,7 @@ class ActionRegistry {
             id: definition.id,
             group: definition.group ?? "util",
             description: definition.description ?? "",
-            params: (definition.params ?? []) as ParamRuntime[],
+            params: definition.params ?? [],
             confirm: definition.confirm ?? false,
             handler: definition.handler,
         };

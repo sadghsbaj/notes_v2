@@ -89,9 +89,9 @@ CLI ist das primäre Interface – fertig implementiert.
 - [x] **fuzzysort für Param Matching** – isSimilar() durch fuzzysort ersetzen ✅
   - Nutzt jetzt `fuzzysort.go()` wie bei Commands
   - Konsistente Fuzzy-Logik, bessere Typo-Toleranz
-- [ ] **Param Types vereinfachen** – ParamDefinition vs ParamRuntime klären
-  - Drei ähnliche Types: Param, ParamDefinition, ParamRuntime
-  - Verwirrend, warum ParamDefinition UND ParamRuntime?
+- [x] **Param Types vereinfachen** – ParamDefinition vs ParamRuntime klären ✅
+  - `ParamDefinition` entfernt (war redundant zu `ParamRuntime`)
+  - Nur noch zwei Types: `Param` (Zod) und `ParamRuntime` (mit Funktionen)
 - [ ] **Help Tooltip Positioning** – Dynamische Charakterbreite statt 4px magic number
   - Bei verschiedenen DPI/Fonts könnte 4px falsch sein
   - `charWidth = measureRef.offsetWidth / textLength`

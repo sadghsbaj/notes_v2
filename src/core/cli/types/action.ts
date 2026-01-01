@@ -103,33 +103,19 @@ export const ParamSchema = z.object({
 export type Param = z.infer<typeof ParamSchema>;
 
 // =============================================================================
-// Extended Param (Runtime - with functions)
+// Parameter Definition (with optional functions)
 // =============================================================================
 
 /**
- * Extended parameter definition with validator and completer functions.
- * Used internally after registration; functions can't be in Zod schema.
+ * Parameter definition with optional validator and completer functions.
+ * Used for both registration (ActionDefinition) and runtime (Action).
+ * Functions can't be in Zod schema, so this extends the base Param type.
  */
 export interface ParamRuntime extends Param {
     /** Custom validator (overrides type-based validation) */
     validate?: ParamValidator;
 
     /** Custom completer for Tab-completion */
-    complete?: ParamCompleter;
-}
-
-// =============================================================================
-// Param Definition (for registering - allows functions)
-// =============================================================================
-
-export interface ParamDefinition {
-    name: string;
-    type: ParamType;
-    default?: unknown;
-    optional?: boolean;
-    hint?: string;
-    help?: ParamHelp;
-    validate?: ParamValidator;
     complete?: ParamCompleter;
 }
 
@@ -141,7 +127,7 @@ export interface ActionDefinition {
     id: string;
     group?: CommandGroup;
     description?: string;
-    params?: ParamDefinition[];
+    params?: ParamRuntime[];
     /** If set, command needs inline confirmation before executing */
     confirm?: ConfirmationType;
     handler: (args: Record<string, unknown>) => void | Promise<void>;
