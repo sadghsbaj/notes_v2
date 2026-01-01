@@ -188,6 +188,64 @@ export const errorMessage = style({
 });
 
 // =============================================================================
+// Help Tooltip (floating above CLI)
+// =============================================================================
+
+export const helpTooltip = style({
+    position: "absolute",
+    bottom: "100%",
+    left: "50%",
+    transform: "translateX(-50%)",
+    marginBottom: spacing.sm,
+    backgroundColor: themeContract.colors.surfaceElevated,
+    borderRadius: radius.md,
+    boxShadow: themeContract.shadows.lg,
+    border: `1px solid ${themeContract.colors.pageBorder}`,
+    padding: spacing.sm,
+    minWidth: "200px",
+    maxWidth: "300px",
+});
+
+export const helpDescription = style({
+    fontFamily: typography.fontFamily.sans,
+    fontSize: typography.fontSize.sm,
+    color: themeContract.colors.textSecondary,
+    marginBottom: spacing.xs,
+});
+
+export const helpOptions = style({
+    display: "flex",
+    flexWrap: "wrap",
+    gap: spacing.xs,
+});
+
+export const helpOption = style({
+    fontFamily: typography.fontFamily.mono,
+    fontSize: typography.fontSize.xs,
+    fontWeight: typography.fontWeight.medium,
+    color: themeContract.colors.accentCommandModeDark,
+    backgroundColor: themeContract.colors.accentCommandModeLight,
+    padding: `2px ${spacing.xs}`,
+    borderRadius: radius.sm,
+});
+
+export const helpExamples = style({
+    display: "flex",
+    flexWrap: "wrap",
+    gap: spacing.xs,
+    marginTop: spacing.xs,
+});
+
+export const helpExample = style({
+    fontFamily: typography.fontFamily.mono,
+    fontSize: typography.fontSize.xs,
+    color: themeContract.colors.textMuted,
+    padding: `2px ${spacing.xs}`,
+    borderRadius: radius.sm,
+    backgroundColor: themeContract.colors.appBg,
+});
+
+// =============================================================================
 // Animations
 // =============================================================================
 

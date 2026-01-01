@@ -10,7 +10,7 @@ import { Mode, modeStore } from "@core/mode";
 import { Terminal } from "lucide-solid";
 import { Show, createEffect, createSignal } from "solid-js";
 import * as styles from "./CliOverlay.css";
-import { CliError, CliInput, CliMathResult, CliParamHints, CliSuggestionBadge } from "./components";
+import { CliError, CliHelpTooltip, CliInput, CliMathResult, CliParamHints, CliSuggestionBadge } from "./components";
 import { useCliKeyboard } from "./hooks";
 
 export function CliOverlay() {
@@ -39,6 +39,7 @@ export function CliOverlay() {
     return (
         <Show when={cliStore.isOpen() || isExiting()}>
             <div class={`${styles.overlay} ${isExiting() ? styles.exiting : styles.entering}`}>
+                <CliHelpTooltip />
                 <div class={styles.inputContainer}>
                     <Terminal size={16} class={styles.icon} />
 

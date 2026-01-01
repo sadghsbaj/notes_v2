@@ -33,7 +33,34 @@ function createCliStore() {
         const parsed = derived.parsedInput();
         const cmd = derived.command();
 
-        if (ghost.mode === "completion" && cmd) {
+        // Param completion (in argument slot)
+        if (ghost.paramCompletion && !derived.isCommandSlot()) {
+            const argIdx = derived.currentArgIndex();
+            if (argIdx !== null && argIdx >= 0) {
+                const slots = parsed.slots;
+                const argSlotIndex = argIdx + 1; // +1 because slot 0 is command
+                const argSlot = slots[argSlotIndex];
+
+                if (argSlot) {
+                    // Replace the current argument with the completion
+                    const before = state().input.slice(0, argSlot.startIndex);
+                    const after = state().input.slice(argSlot.endIndex);
+                    const newValue = ghost.paramCompletion.value;
+                    const newInput = `${before}${newValue}${after}`;
+                    actions.setInput(newInput, before.length + newValue.length);
+                    return true;
+                }
+                // No existing arg slot - append
+                const inp = state().input;
+                const needsSpace = inp.length > 0 && !inp.endsWith(" ");
+                const newInput = inp + (needsSpace ? " " : "") + ghost.paramCompletion.value;
+                actions.setInput(newInput);
+                return true;
+            }
+        }
+
+        // Command completion
+        if (ghost.mode === "completion" && cmd && derived.isCommandSlot()) {
             const newCmd = cmd + ghost.text;
             const beforeCmd = state().input.slice(0, parsed.slots[0]?.startIndex ?? 0);
             const afterCmd = state().input.slice(parsed.slots[0]?.endIndex ?? 0);
@@ -41,7 +68,8 @@ function createCliStore() {
             return true;
         }
 
-        if (ghost.mode === "replacement" && cmd) {
+        // Command replacement (fuzzy match)
+        if (ghost.mode === "replacement" && cmd && derived.isCommandSlot()) {
             const beforeCmd = state().input.slice(0, parsed.slots[0]?.startIndex ?? 0);
             const afterCmd = state().input.slice(parsed.slots[0]?.endIndex ?? 0);
             actions.setInput(`${beforeCmd}${ghost.text} ${afterCmd.trimStart()}`);

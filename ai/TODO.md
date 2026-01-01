@@ -65,8 +65,8 @@ CLI ist das primäre Interface – fertig implementiert.
 - [x] **Error UX** – Bei Fehler Param-Pillen ausblenden, nur Error zeigen
 - [x] **Param Schema** – Erweitertes Schema: `help`, `enum`-type, `validate`, `complete`
 - [x] **Type Validators** – Zentrale Validatoren für range, path, enum etc.
-- [ ] **Help Tooltip** – `?` als Param zeigt floating Hilfe (z.B. `fs|scan`)
-- [ ] **Param Completion** – Tab-Completion für Parameter (enum options, paths)
+- [x] **Help Tooltip** – `?` als Param zeigt floating Hilfe (z.B. `fs|scan`)
+- [x] **Param Completion** – Tab-Completion für Parameter (enum options, paths)
 - [ ] **AI Command** – `ai "prompt" [fast|think]` mit Gemini-Integration
 
 ---
