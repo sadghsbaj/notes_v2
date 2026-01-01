@@ -57,20 +57,22 @@ export function searchActions(query: string, actions: Action[]): SearchResult[] 
                     seen.add(action.id);
                     results.push({
                         action,
-                        score: 1000000, // Very high score for exact
+                        score: 1000000,
                         matchedKey: key,
                         isExact: true,
                         isPrefix: false,
                     });
                 }
                 break;
-            } else if (keyLower.startsWith(queryLower)) {
+            }
+
+            if (keyLower.startsWith(queryLower)) {
                 // Prefix match - high priority
                 if (!seen.has(action.id)) {
                     seen.add(action.id);
                     results.push({
                         action,
-                        score: 100000 - (key.length - query.length), // Shorter = better
+                        score: 100000 - (key.length - query.length),
                         matchedKey: key,
                         isExact: false,
                         isPrefix: true,
@@ -85,7 +87,6 @@ export function searchActions(query: string, actions: Action[]): SearchResult[] 
     const remainingActions = actions.filter((a) => !seen.has(a.id));
 
     if (remainingActions.length > 0) {
-        // Build search targets
         const targets = remainingActions.flatMap((action) => {
             const keys = [action.id, ...action.aliases];
             return keys.map((key) => ({
@@ -116,7 +117,6 @@ export function searchActions(query: string, actions: Action[]): SearchResult[] 
         }
     }
 
-    // Sort by score descending
     return results.sort((a, b) => b.score - a.score);
 }
 
@@ -125,5 +125,5 @@ export function searchActions(query: string, actions: Action[]): SearchResult[] 
  */
 export function getBestMatch(query: string, actions: Action[]): SearchResult | null {
     const results = searchActions(query, actions);
-    return results.length > 0 ? results[0] : null;
+    return results[0] ?? null;
 }
