@@ -1,5 +1,5 @@
 import { type SearchResult, getBestMatch, searchActions } from "../search/fuzzy";
-import type { Action, ActionDefinition } from "../types/action";
+import type { Action, ActionDefinition, ParamRuntime } from "../types/action";
 
 // =============================================================================
 // Action Registry
@@ -7,7 +7,6 @@ import type { Action, ActionDefinition } from "../types/action";
 
 class ActionRegistry {
     private actions: Map<string, Action> = new Map();
-    private aliasMap: Map<string, string> = new Map(); // alias → action id
 
     /**
      * Register an action
@@ -16,9 +15,8 @@ class ActionRegistry {
         const action: Action = {
             id: definition.id,
             group: definition.group ?? "util",
-            aliases: definition.aliases ?? [],
             description: definition.description ?? "",
-            params: definition.params ?? [],
+            params: (definition.params ?? []) as ParamRuntime[],
             confirm: definition.confirm ?? false,
             handler: definition.handler,
         };
@@ -29,35 +27,13 @@ class ActionRegistry {
         }
 
         this.actions.set(action.id, action);
-
-        // Register aliases
-        for (const alias of action.aliases) {
-            if (this.aliasMap.has(alias)) {
-                console.warn(
-                    `[ActionRegistry] Alias "${alias}" already registered for "${this.aliasMap.get(alias) ?? "unknown"}"`
-                );
-            }
-            this.aliasMap.set(alias, action.id);
-        }
     }
 
     /**
-     * Get an action by id or alias
+     * Get an action by id
      */
-    get(idOrAlias: string): Action | null {
-        // Try direct id lookup
-        const direct = this.actions.get(idOrAlias);
-        if (direct) {
-            return direct;
-        }
-
-        // Try alias lookup
-        const actionId = this.aliasMap.get(idOrAlias);
-        if (actionId) {
-            return this.actions.get(actionId) ?? null;
-        }
-
-        return null;
+    get(id: string): Action | null {
+        return this.actions.get(id) ?? null;
     }
 
     /**
@@ -84,8 +60,8 @@ class ActionRegistry {
     /**
      * Check if an action exists
      */
-    has(idOrAlias: string): boolean {
-        return this.get(idOrAlias) !== null;
+    has(id: string): boolean {
+        return this.actions.has(id);
     }
 
     /**
@@ -93,7 +69,6 @@ class ActionRegistry {
      */
     clear(): void {
         this.actions.clear();
-        this.aliasMap.clear();
     }
 }
 

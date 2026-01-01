@@ -15,7 +15,7 @@ actionRegistry.register({
     id: "cd",
     group: "filesystem",
     description: "Verzeichnis wechseln",
-    params: [{ name: "path", type: "string", optional: false, hint: "z.B. @mathe oder ../ordner" }],
+    params: [{ name: "path", type: "path", optional: false, hint: "z.B. @mathe oder ../ordner" }],
     handler: (args) => {
         console.log("[cd]", args["path"]);
     },
@@ -28,7 +28,6 @@ actionRegistry.register({
 actionRegistry.register({
     id: "mkdir",
     group: "filesystem",
-    aliases: ["md"],
     description: "Ordner erstellen",
     params: [{ name: "name", type: "string", optional: false, hint: "Ordnername" }],
     handler: (args) => {
@@ -43,7 +42,6 @@ actionRegistry.register({
 actionRegistry.register({
     id: "touch",
     group: "filesystem",
-    aliases: ["new"],
     description: "Leeres Dokument erstellen",
     params: [{ name: "name", type: "string", optional: false, hint: "Dokumentname" }],
     handler: (args) => {
@@ -58,11 +56,10 @@ actionRegistry.register({
 actionRegistry.register({
     id: "rm",
     group: "filesystem",
-    aliases: ["del", "delete"],
     description: "Datei oder Ordner löschen",
     confirm: "delete",
     params: [
-        { name: "path", type: "string", optional: false, hint: "Pfad zum Löschen" },
+        { name: "path", type: "path", optional: false, hint: "Pfad zum Löschen" },
         { name: "force", type: "boolean", optional: true, default: false, hint: "Ohne Bestätigung" },
     ],
     handler: (args) => {
@@ -77,12 +74,11 @@ actionRegistry.register({
 actionRegistry.register({
     id: "mv",
     group: "filesystem",
-    aliases: ["move", "rename"],
     description: "Verschieben oder umbenennen",
     confirm: "overwrite",
     params: [
-        { name: "src", type: "string", optional: false, hint: "Quelle" },
-        { name: "dest", type: "string", optional: false, hint: "Ziel" },
+        { name: "src", type: "path", optional: false, hint: "Quelle" },
+        { name: "dest", type: "path", optional: false, hint: "Ziel" },
     ],
     handler: (args) => {
         console.log("[mv]", args["src"], "→", args["dest"]);
@@ -96,12 +92,11 @@ actionRegistry.register({
 actionRegistry.register({
     id: "cp",
     group: "filesystem",
-    aliases: ["copy"],
     description: "Kopieren",
     confirm: "overwrite",
     params: [
-        { name: "src", type: "string", optional: false, hint: "Quelle" },
-        { name: "dest", type: "string", optional: false, hint: "Ziel" },
+        { name: "src", type: "path", optional: false, hint: "Quelle" },
+        { name: "dest", type: "path", optional: false, hint: "Ziel" },
     ],
     handler: (args) => {
         console.log("[cp]", args["src"], "→", args["dest"]);
@@ -115,9 +110,8 @@ actionRegistry.register({
 actionRegistry.register({
     id: "open",
     group: "filesystem",
-    aliases: ["o"],
     description: "Dokument öffnen",
-    params: [{ name: "file", type: "string", optional: false, hint: "Dokumentpfad" }],
+    params: [{ name: "file", type: "path", optional: false, hint: "Dokumentpfad" }],
     handler: (args) => {
         console.log("[open]", args["file"]);
     },

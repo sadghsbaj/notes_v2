@@ -27,7 +27,6 @@ const groupOrder: CommandGroup[] = ["filesystem", "page", "view", "util"];
 actionRegistry.register({
     id: "help",
     group: "util",
-    aliases: ["h", "?"],
     description: "Liste aller verfügbaren Befehle",
     params: [],
     handler: () => {
@@ -52,13 +51,12 @@ actionRegistry.register({
             console.log(`${groupLabels[group]}`);
 
             for (const action of groupActions) {
-                const aliases = action.aliases.length > 0 ? ` (${action.aliases.join(", ")})` : "";
                 const params =
                     action.params.length > 0
                         ? ` ${action.params.map((p) => (p.optional ? `[${p.name}]` : `<${p.name}>`)).join(" ")}`
                         : "";
 
-                console.log(`  ${action.id}${aliases}${params}`);
+                console.log(`  ${action.id}${params}`);
                 if (action.description) {
                     console.log(`    → ${action.description}`);
                 }

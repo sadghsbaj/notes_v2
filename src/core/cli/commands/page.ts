@@ -14,7 +14,6 @@ import { actionRegistry } from "../registry/action-registry";
 actionRegistry.register({
     id: "page-add",
     group: "page",
-    aliases: ["pa"],
     description: "Neue Seite hinzufügen",
     params: [
         { name: "count", type: "number", optional: true, default: 1, hint: "Anzahl (Standard: 1)" },
@@ -33,7 +32,6 @@ actionRegistry.register({
 actionRegistry.register({
     id: "page-rm",
     group: "page",
-    aliases: ["pd", "page-del"],
     description: "Seite löschen",
     confirm: "delete",
     params: [{ name: "pages", type: "range", optional: false, hint: "z.B. 1 oder 3-5 oder 1;3;5" }],
@@ -49,7 +47,6 @@ actionRegistry.register({
 actionRegistry.register({
     id: "page-swap",
     group: "page",
-    aliases: ["ps"],
     description: "Zwei Seiten tauschen",
     params: [
         { name: "a", type: "number", optional: false, hint: "Erste Seite" },
@@ -67,7 +64,6 @@ actionRegistry.register({
 actionRegistry.register({
     id: "page-mv",
     group: "page",
-    aliases: ["pm"],
     description: "Seiten verschieben",
     params: [
         { name: "pages", type: "range", optional: false, hint: "Zu verschiebende Seiten" },
@@ -85,12 +81,17 @@ actionRegistry.register({
 actionRegistry.register({
     id: "page-clear",
     group: "page",
-    aliases: ["pc"],
     description: "Seiteninhalt löschen",
     confirm: "destructive",
     params: [
         { name: "pages", type: "range", optional: true, default: ".", hint: "Seiten (Standard: aktuelle)" },
-        { name: "what", type: "string", optional: false, hint: "content | bg | all" },
+        {
+            name: "what",
+            type: "enum",
+            optional: false,
+            hint: "content | bg | all",
+            help: { options: ["content", "bg", "all"] },
+        },
     ],
     handler: (args) => {
         console.log("[page-clear]", args["pages"], `what=${args["what"]}`);
@@ -104,7 +105,6 @@ actionRegistry.register({
 actionRegistry.register({
     id: "page-rotate",
     group: "page",
-    aliases: ["pr"],
     description: "Seite rotieren",
     params: [
         { name: "pages", type: "range", optional: true, default: ".", hint: "Seiten" },
@@ -122,10 +122,15 @@ actionRegistry.register({
 actionRegistry.register({
     id: "page-import",
     group: "page",
-    aliases: ["pi"],
     description: "Seiten importieren",
     params: [
-        { name: "source", type: "string", optional: false, hint: "fs | scan" },
+        {
+            name: "source",
+            type: "enum",
+            optional: false,
+            hint: "fs | scan",
+            help: { options: ["fs", "scan"], description: "Importquelle" },
+        },
         { name: "pos", type: "number", optional: true, default: -1, hint: "Position (Standard: Ende)" },
     ],
     handler: (args) => {
@@ -140,11 +145,17 @@ actionRegistry.register({
 actionRegistry.register({
     id: "page-export",
     group: "page",
-    aliases: ["pe"],
     description: "Seiten exportieren",
     params: [
         { name: "pages", type: "range", optional: true, default: ".", hint: "Seiten (Standard: alle)" },
-        { name: "what", type: "string", optional: true, default: "all", hint: "all | content | bg" },
+        {
+            name: "what",
+            type: "enum",
+            optional: true,
+            default: "all",
+            hint: "all | content | bg",
+            help: { options: ["all", "content", "bg"] },
+        },
     ],
     handler: (args) => {
         console.log("[page-export]", args["pages"], `what=${args["what"]}`);

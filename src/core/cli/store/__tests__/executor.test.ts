@@ -98,7 +98,7 @@ describe("executor", () => {
             const params: Param[] = [{ name: "num", type: "number", optional: false }];
             const slots = [slot("abc")];
             const result = parseArgs(params, slots);
-            expect(result.error).toBe("num: keine Zahl");
+            expect(result.error).toBe("num: Keine gültige Zahl");
         });
 
         it("handles multiple params", () => {

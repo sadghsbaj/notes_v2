@@ -1,5 +1,6 @@
-import type { Param } from "../types/action";
+import type { ParamRuntime } from "../types/action";
 import type { Slot } from "../types/slot";
+import { validateParam } from "../validators";
 
 // =============================================================================
 // Parameter Execution
@@ -15,11 +16,12 @@ export interface ParsedArgs {
 
 /**
  * Parse argument slots into typed values based on param definitions.
+ * - Validates using type validators or custom validators
  * - Handles optional params with defaults
  * - "_" as placeholder skips to default value
- * - Returns error if required param is missing
+ * - Returns error if required param is missing or validation fails
  */
-export function parseArgs(params: Param[], slots: Slot[]): ParsedArgs {
+export function parseArgs(params: ParamRuntime[], slots: Slot[]): ParsedArgs {
     const args: Record<string, unknown> = {};
     let error: string | null = null;
 
@@ -48,26 +50,34 @@ export function parseArgs(params: Param[], slots: Slot[]): ParsedArgs {
             continue;
         }
 
+        // Validate the value
+        // Use custom validator if provided, otherwise use type validator
+        if (param.validate) {
+            const result = param.validate(rawValue, param.name);
+            if (!result.valid) {
+                error = result.error ?? `Ungültig: ${param.name}`;
+                break;
+            }
+        } else {
+            const result = validateParam(rawValue, param.type, param.help);
+            if (!result.valid) {
+                error = `${param.name}: ${result.error}`;
+                break;
+            }
+        }
+
         // Parse based on type
         switch (param.type) {
             case "number": {
                 const numStr = rawValue.replace(",", ".");
-                const num = Number.parseFloat(numStr);
-                if (Number.isNaN(num)) {
-                    error = `${param.name}: keine Zahl`;
-                    break;
-                }
-                args[param.name] = num;
+                args[param.name] = Number.parseFloat(numStr);
                 break;
             }
             case "boolean":
                 args[param.name] = rawValue.toLowerCase() === "true" || rawValue === "1" || rawValue === "ja";
                 break;
-            case "range":
-                // Will be parsed by command if needed
-                args[param.name] = rawValue;
-                break;
             default:
+                // range, path, enum, string - keep as string
                 args[param.name] = rawValue;
         }
 

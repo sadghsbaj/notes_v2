@@ -8,7 +8,7 @@ import type { Action } from "../types/action";
 export interface SearchResult {
     action: Action;
     score: number;
-    /** The matched key (id or alias) */
+    /** The matched command id */
     matchedKey: string;
     /** Whether this is an exact match */
     isExact: boolean;
@@ -46,40 +46,28 @@ export function searchActions(query: string, actions: Action[]): SearchResult[] 
 
     // First pass: Check for exact and prefix matches
     for (const action of actions) {
-        const keys = [action.id, ...action.aliases];
+        const idLower = action.id.toLowerCase();
 
-        for (const key of keys) {
-            const keyLower = key.toLowerCase();
-
-            if (keyLower === queryLower) {
-                // Exact match - highest priority
-                if (!seen.has(action.id)) {
-                    seen.add(action.id);
-                    results.push({
-                        action,
-                        score: 1000000,
-                        matchedKey: key,
-                        isExact: true,
-                        isPrefix: false,
-                    });
-                }
-                break;
-            }
-
-            if (keyLower.startsWith(queryLower)) {
-                // Prefix match - high priority
-                if (!seen.has(action.id)) {
-                    seen.add(action.id);
-                    results.push({
-                        action,
-                        score: 100000 - (key.length - query.length),
-                        matchedKey: key,
-                        isExact: false,
-                        isPrefix: true,
-                    });
-                }
-                break;
-            }
+        if (idLower === queryLower) {
+            // Exact match - highest priority
+            seen.add(action.id);
+            results.push({
+                action,
+                score: 1000000,
+                matchedKey: action.id,
+                isExact: true,
+                isPrefix: false,
+            });
+        } else if (idLower.startsWith(queryLower)) {
+            // Prefix match - high priority
+            seen.add(action.id);
+            results.push({
+                action,
+                score: 100000 - (action.id.length - query.length),
+                matchedKey: action.id,
+                isExact: false,
+                isPrefix: true,
+            });
         }
     }
 
@@ -87,14 +75,11 @@ export function searchActions(query: string, actions: Action[]): SearchResult[] 
     const remainingActions = actions.filter((a) => !seen.has(a.id));
 
     if (remainingActions.length > 0) {
-        const targets = remainingActions.flatMap((action) => {
-            const keys = [action.id, ...action.aliases];
-            return keys.map((key) => ({
-                action,
-                key,
-                prepared: fuzzysort.prepare(key),
-            }));
-        });
+        const targets = remainingActions.map((action) => ({
+            action,
+            key: action.id,
+            prepared: fuzzysort.prepare(action.id),
+        }));
 
         const fuzzyResults = fuzzysort.go(query, targets, {
             key: "key",

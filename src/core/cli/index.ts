@@ -14,6 +14,9 @@ export * from "./search";
 // Registry
 export * from "./registry";
 
+// Validators
+export * from "./validators";
+
 // Store
 export * from "./store";
 
