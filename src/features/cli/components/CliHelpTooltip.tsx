@@ -1,7 +1,8 @@
 /**
  * CLI Help Tooltip Component
  *
- * Displays floating help content when user types "?" as a parameter value.
+ * Displays floating help when user types "?" - minimal, premium design.
+ * Shows only the available options as pills.
  */
 
 import { cliStore } from "@core/cli";
@@ -11,27 +12,12 @@ import * as styles from "../CliOverlay.css";
 export function CliHelpTooltip() {
     const ghost = () => cliStore.ghostText();
     const help = () => ghost().help;
+    const options = () => help()?.options ?? [];
 
     return (
-        <Show when={ghost().mode === "help" && help()}>
+        <Show when={ghost().mode === "help" && options().length > 0}>
             <div class={styles.helpTooltip}>
-                <Show when={help()?.description}>
-                    <div class={styles.helpDescription}>{help()?.description}</div>
-                </Show>
-                <Show when={help()?.options && (help()?.options?.length ?? 0) > 0}>
-                    <div class={styles.helpOptions}>
-                        <For each={help()?.options ?? []}>
-                            {(option) => <span class={styles.helpOption}>{option}</span>}
-                        </For>
-                    </div>
-                </Show>
-                <Show when={help()?.examples && (help()?.examples?.length ?? 0) > 0}>
-                    <div class={styles.helpExamples}>
-                        <For each={help()?.examples ?? []}>
-                            {(example) => <span class={styles.helpExample}>{example}</span>}
-                        </For>
-                    </div>
-                </Show>
+                <For each={options()}>{(option) => <span class={styles.helpOption}>{option}</span>}</For>
             </div>
         </Show>
     );

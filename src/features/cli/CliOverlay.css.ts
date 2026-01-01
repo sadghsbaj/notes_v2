@@ -188,61 +188,33 @@ export const errorMessage = style({
 });
 
 // =============================================================================
-// Help Tooltip (floating above CLI)
+// Help Tooltip (floating above CLI) - Minimal Premium Design
 // =============================================================================
 
 export const helpTooltip = style({
     position: "absolute",
-    bottom: "100%",
+    bottom: "calc(100% + 8px)",
     left: "50%",
     transform: "translateX(-50%)",
-    marginBottom: spacing.sm,
-    backgroundColor: themeContract.colors.surfaceElevated,
-    borderRadius: radius.md,
-    boxShadow: themeContract.shadows.lg,
-    border: `1px solid ${themeContract.colors.pageBorder}`,
-    padding: spacing.sm,
-    minWidth: "200px",
-    maxWidth: "300px",
-});
-
-export const helpDescription = style({
-    fontFamily: typography.fontFamily.sans,
-    fontSize: typography.fontSize.sm,
-    color: themeContract.colors.textSecondary,
-    marginBottom: spacing.xs,
-});
-
-export const helpOptions = style({
     display: "flex",
-    flexWrap: "wrap",
     gap: spacing.xs,
+    backgroundColor: themeContract.colors.surfaceElevated,
+    borderRadius: radius.lg,
+    boxShadow: themeContract.shadows.md,
+    border: `1px solid ${themeContract.colors.pageBorder}`,
+    padding: `${spacing.xs} ${spacing.sm}`,
 });
 
 export const helpOption = style({
     fontFamily: typography.fontFamily.mono,
-    fontSize: typography.fontSize.xs,
+    fontSize: typography.fontSize.sm,
     fontWeight: typography.fontWeight.medium,
-    color: themeContract.colors.accentCommandModeDark,
-    backgroundColor: themeContract.colors.accentCommandModeLight,
-    padding: `2px ${spacing.xs}`,
-    borderRadius: radius.sm,
-});
-
-export const helpExamples = style({
-    display: "flex",
-    flexWrap: "wrap",
-    gap: spacing.xs,
-    marginTop: spacing.xs,
-});
-
-export const helpExample = style({
-    fontFamily: typography.fontFamily.mono,
-    fontSize: typography.fontSize.xs,
-    color: themeContract.colors.textMuted,
-    padding: `2px ${spacing.xs}`,
+    color: themeContract.colors.textPrimary,
+    padding: `4px ${spacing.sm}`,
     borderRadius: radius.sm,
     backgroundColor: themeContract.colors.appBg,
+    border: `1px solid ${themeContract.colors.pageBorder}`,
+    transition: `background-color ${motion.duration.fast}`,
 });
 
 // =============================================================================
