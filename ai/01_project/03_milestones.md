@@ -16,7 +16,17 @@
     - Global Key Listener & Mode State (Normal, Edit, Insert, Command).
     - Mode Indicator UI.
 
-## M2: Core System (CLI & Data)
+## M2: Capacitor Setup (Basic)
+**Ziel:** Die App läuft als Android-App (noch ohne native Plugins).
+
+- [ ] **Capacitor Init**
+    - `npm install @capacitor/core @capacitor/cli @capacitor/android`.
+    - `npx cap init`.
+- [ ] **Android Project Structure**
+    - Ordner-Struktur für Android-Builds aufsetzen.
+    - Erste APK bauen und auf Tablet testen (Hello World Level).
+
+## M3: Core System (CLI & Data)
 **Ziel:** Das "Betriebssystem" läuft. Man kann Dokumente verwalten und die CLI nutzen.
 
 - [ ] **Advanced Inline CLI** (S002)
@@ -32,14 +42,14 @@
     - Smart Aliases (`@mathe .`).
     - `open` / `cd` Logic.
 
-## M3: Navigation
+## M4: Navigation
 **Ziel:** Flüssiges Bewegen durch Dokumente.
 
 - [ ] **Navigation** (S008)
     - WASD-Scrolling.
     - Zoom-Logic (Detail/Normal/Fit).
 
-## M4: Content & Editing
+## M5: Content & Editing
 **Ziel:** Man kann Notizen schreiben und Blöcke manipulieren.
 
 - [ ] **Block System** (S006)
@@ -50,7 +60,7 @@
     - Tiptap-Setup im Insert-Mode.
     - Markdown-Shortcuts & Styling.
 
-## M5: Advanced Features
+## M6: Advanced Features
 **Ziel:** Der volle Funktionsumfang für den Schulalltag.
 
 - [ ] **PDF Engine** (S004)
@@ -60,7 +70,7 @@
     - Gemini API Anbindung.
     - Interactive Components (JSON-Editor).
 
-## M6: Optimization
+## M7: Optimization
 **Ziel:** Performance-Tuning für große Dokumente.
 
 - [ ] **Performance Tuning**
