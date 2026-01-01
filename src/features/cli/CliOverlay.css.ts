@@ -188,7 +188,7 @@ export const errorMessage = style({
 });
 
 // =============================================================================
-// Help Tooltip (floating above CLI) - Minimal Premium Design
+// Help Tooltip (floating above CLI) - Colorful Pills
 // =============================================================================
 
 export const helpTooltip = style({
@@ -209,12 +209,10 @@ export const helpOption = style({
     fontFamily: typography.fontFamily.mono,
     fontSize: typography.fontSize.sm,
     fontWeight: typography.fontWeight.medium,
-    color: themeContract.colors.textPrimary,
+    color: themeContract.colors.accentCommandModeDark,
+    backgroundColor: themeContract.colors.accentCommandModeLight,
     padding: `4px ${spacing.sm}`,
     borderRadius: radius.sm,
-    backgroundColor: themeContract.colors.appBg,
-    border: `1px solid ${themeContract.colors.pageBorder}`,
-    transition: `background-color ${motion.duration.fast}`,
 });
 
 // =============================================================================

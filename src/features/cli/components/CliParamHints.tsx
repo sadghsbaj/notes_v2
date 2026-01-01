@@ -1,7 +1,8 @@
 /**
  * CLI Param Hints Component
  *
- * Displays parameter pills showing expected arguments for the current command.
+ * Displays parameter pills showing expected args.
+ * Always shown when in params mode (unless error is displayed).
  */
 
 import { cliStore } from "@core/cli";
@@ -12,16 +13,16 @@ export function CliParamHints() {
     const ghost = () => cliStore.ghostText();
 
     return (
-        <Show when={ghost().mode === "params" && !cliStore.errorMessage()}>
-            <span class={styles.paramHints}>
+        <Show when={ghost().mode === "params" && ghost().paramNames.length > 0 && !cliStore.errorMessage()}>
+            <div class={styles.paramHints}>
                 <For each={ghost().paramNames}>
-                    {(name, idx) => (
-                        <span class={idx() === ghost().activeParamIndex ? styles.paramActive : styles.param}>
+                    {(name, index) => (
+                        <span class={index() === ghost().activeParamIndex ? styles.paramActive : styles.param}>
                             {name}
                         </span>
                     )}
                 </For>
-            </span>
+            </div>
         </Show>
     );
 }

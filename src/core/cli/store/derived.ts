@@ -4,7 +4,7 @@ import { getArgs, getCommand, getCurrentArgIndex, isInCommandSlot, parseInput } 
 import { actionRegistry } from "../registry/action-registry";
 import type { SearchResult } from "../search/fuzzy";
 import type { Action, ParamRuntime } from "../types/action";
-import type { GhostTextExtended, ParamCompletionResult } from "../types/ghost";
+import type { GhostText } from "../types/ghost";
 import { emptyGhostText } from "../types/ghost";
 import type { ParsedInput, Slot } from "../types/slot";
 import type { CliState } from "./state";
@@ -17,7 +17,6 @@ import type { CliState } from "./state";
  * Get completion options for a param based on its type and help.options
  */
 function getParamOptions(param: ParamRuntime): string[] {
-    // Use help.options if defined
     if (param.help?.options && param.help.options.length > 0) {
         return param.help.options;
     }
@@ -26,8 +25,9 @@ function getParamOptions(param: ParamRuntime): string[] {
 
 /**
  * Find best matching option for current input
+ * Returns: { value, isPrefix } or null
  */
-function findParamCompletion(input: string, options: string[]): ParamCompletionResult | null {
+function findParamMatch(input: string, options: string[]): { value: string; isPrefix: boolean } | null {
     if (options.length === 0 || input === "" || input === "?") {
         return null;
     }
@@ -36,28 +36,54 @@ function findParamCompletion(input: string, options: string[]): ParamCompletionR
 
     // First: exact prefix match
     for (const opt of options) {
-        if (opt.toLowerCase().startsWith(inputLower)) {
-            const isComplete = opt.toLowerCase() === inputLower;
-            if (!isComplete) {
-                return {
-                    value: opt,
-                    isPrefix: true,
-                };
-            }
+        const optLower = opt.toLowerCase();
+        if (optLower.startsWith(inputLower) && optLower !== inputLower) {
+            return { value: opt, isPrefix: true };
         }
     }
 
-    // Second: contains match (fuzzy-like)
+    // Second: contains/fuzzy match (not prefix)
     for (const opt of options) {
-        if (opt.toLowerCase().includes(inputLower)) {
-            return {
-                value: opt,
-                isPrefix: false,
-            };
+        const optLower = opt.toLowerCase();
+        if (optLower.includes(inputLower) && !optLower.startsWith(inputLower)) {
+            return { value: opt, isPrefix: false };
+        }
+    }
+
+    // Third: check for typos - simple Levenshtein-like detection
+    // If input is similar enough to an option (e.g., "cntent" vs "content")
+    for (const opt of options) {
+        if (isSimilar(input, opt)) {
+            return { value: opt, isPrefix: false };
         }
     }
 
     return null;
+}
+
+/**
+ * Simple similarity check for typo detection
+ */
+function isSimilar(input: string, target: string): boolean {
+    const inputLower = input.toLowerCase();
+    const targetLower = target.toLowerCase();
+
+    // If lengths are too different, not similar
+    if (Math.abs(inputLower.length - targetLower.length) > 2) {
+        return false;
+    }
+
+    // Count matching characters
+    let matches = 0;
+    for (const char of inputLower) {
+        if (targetLower.includes(char)) {
+            matches++;
+        }
+    }
+
+    // If more than 70% of chars match, consider similar
+    const threshold = Math.min(inputLower.length, targetLower.length) * 0.7;
+    return matches >= threshold && inputLower.length >= 2;
 }
 
 // =============================================================================
@@ -126,13 +152,13 @@ export function createCliDerivedState(state: () => CliState) {
     });
 
     // Ghost text computation
-    const ghostText = createMemo<GhostTextExtended>(() => {
+    const ghostText = createMemo<GhostText>(() => {
         const cmd = command();
         const action = resolvedAction();
         const param = currentParam();
         const argValue = currentArgValue();
 
-        // Math mode - no ghost, result shown separately
+        // Math mode - no ghost
         if (mathResult() !== null) {
             return emptyGhostText;
         }
@@ -142,7 +168,7 @@ export function createCliDerivedState(state: () => CliState) {
             return emptyGhostText;
         }
 
-        // In command slot - show completion or replacement
+        // In command slot - show command completion or replacement
         if (isCommandSlot()) {
             const best = selectedSuggestion();
             if (!best) {
@@ -154,71 +180,65 @@ export function createCliDerivedState(state: () => CliState) {
 
             if (matchedLower.startsWith(cmdLower)) {
                 return {
-                    mode: "completion",
-                    text: best.matchedKey.slice(cmd.length),
+                    mode: "command-completion",
+                    commandText: best.matchedKey.slice(cmd.length),
                     activeParamIndex: null,
                     paramNames: [],
+                    paramCompletionText: "",
+                    paramReplacementText: "",
+                    showHelp: false,
                 };
             }
             return {
-                mode: "replacement",
-                text: best.matchedKey,
+                mode: "command-replacement",
+                commandText: best.matchedKey,
                 activeParamIndex: null,
                 paramNames: [],
+                paramCompletionText: "",
+                paramReplacementText: "",
+                showHelp: false,
             };
         }
 
-        // In argument slot
+        // In argument slot - always params mode with optional completion/replacement
         if (action && action.params.length > 0) {
             const argIdx = currentArgIndex() ?? 0;
             const paramNames = action.params.map((p) => (p.optional ? `[${p.name}]` : p.name));
             const activeIdx = Math.min(argIdx, action.params.length - 1);
 
+            // Base params result
+            const result: GhostText = {
+                mode: "params",
+                commandText: "",
+                activeParamIndex: activeIdx,
+                paramNames,
+                paramCompletionText: "",
+                paramReplacementText: "",
+                showHelp: false,
+                help: param?.help,
+            };
+
             // Check for help request ("?")
-            if (argValue === "?" && param?.help) {
-                return {
-                    mode: "help",
-                    text: "",
-                    activeParamIndex: activeIdx,
-                    paramNames,
-                    help: param.help,
-                };
+            if (argValue === "?") {
+                result.showHelp = true;
+                return result;
             }
 
-            // Check for param completion (enum options, etc.)
+            // Check for param completion/replacement
             if (param && argValue !== "") {
                 const options = getParamOptions(param);
-                const completion = findParamCompletion(argValue, options);
+                const match = findParamMatch(argValue, options);
 
-                if (completion) {
-                    // Show completion or replacement for param
-                    if (completion.isPrefix) {
-                        return {
-                            mode: "completion",
-                            text: completion.value.slice(argValue.length),
-                            activeParamIndex: activeIdx,
-                            paramNames,
-                            paramCompletion: completion,
-                        };
+                if (match) {
+                    if (match.isPrefix) {
+                        result.paramCompletionText = match.value.slice(argValue.length);
+                    } else {
+                        result.paramReplacementText = match.value;
                     }
-                    return {
-                        mode: "replacement",
-                        text: completion.value,
-                        activeParamIndex: activeIdx,
-                        paramNames,
-                        paramCompletion: completion,
-                    };
                 }
             }
 
-            // Default: show param hints
-            return {
-                mode: "params",
-                text: "",
-                activeParamIndex: activeIdx,
-                paramNames,
-                help: param?.help,
-            };
+            return result;
         }
 
         return emptyGhostText;

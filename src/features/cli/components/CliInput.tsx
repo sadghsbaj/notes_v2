@@ -6,7 +6,6 @@
 
 import { cliStore } from "@core/cli";
 import { Mode, modeStore } from "@core/mode";
-import type { JSX } from "solid-js";
 import { Show, createEffect } from "solid-js";
 import * as styles from "../CliOverlay.css";
 
@@ -46,14 +45,22 @@ export function CliInput(props: CliInputProps) {
 
     const ghost = () => cliStore.ghostText();
 
+    // Determine ghost completion text (command or param)
+    const completionText = () => {
+        const g = ghost();
+        if (g.mode === "command-completion") return g.commandText;
+        if (g.mode === "params" && g.paramCompletionText) return g.paramCompletionText;
+        return "";
+    };
+
     return (
         <div class={styles.inputLayer}>
             {/* Ghost completion (prefix match) - inline */}
-            <Show when={ghost().mode === "completion"}>
+            <Show when={completionText() !== ""}>
                 <div class={styles.ghostLayer}>
                     <span class={styles.ghostText}>
                         <span style={{ visibility: "hidden" }}>{cliStore.input()}</span>
-                        <span class={styles.ghostCompletion}>{ghost().text}</span>
+                        <span class={styles.ghostCompletion}>{completionText()}</span>
                     </span>
                 </div>
             </Show>

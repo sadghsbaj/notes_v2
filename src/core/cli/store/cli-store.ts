@@ -4,7 +4,6 @@
  * Composes state, actions, derived state, and execution logic.
  */
 
-import { evaluateMath } from "../commands/math-eval";
 import { createCliActions } from "./actions";
 import { createCliDerivedState } from "./derived";
 import { parseArgs } from "./executor";
@@ -33,35 +32,41 @@ function createCliStore() {
         const parsed = derived.parsedInput();
         const cmd = derived.command();
 
-        // Param completion (in argument slot)
-        if (ghost.paramCompletion && !derived.isCommandSlot()) {
-            const argIdx = derived.currentArgIndex();
-            if (argIdx !== null && argIdx >= 0) {
-                const slots = parsed.slots;
-                const argSlotIndex = argIdx + 1; // +1 because slot 0 is command
-                const argSlot = slots[argSlotIndex];
+        // Param completion (in params mode)
+        if (ghost.mode === "params") {
+            const completionValue =
+                ghost.paramCompletionText !== ""
+                    ? derived.currentArgValue() + ghost.paramCompletionText
+                    : ghost.paramReplacementText;
 
-                if (argSlot) {
-                    // Replace the current argument with the completion
-                    const before = state().input.slice(0, argSlot.startIndex);
-                    const after = state().input.slice(argSlot.endIndex);
-                    const newValue = ghost.paramCompletion.value;
-                    const newInput = `${before}${newValue}${after}`;
-                    actions.setInput(newInput, before.length + newValue.length);
+            if (completionValue !== "") {
+                const argIdx = derived.currentArgIndex();
+                if (argIdx !== null && argIdx >= 0) {
+                    const slots = parsed.slots;
+                    const argSlotIndex = argIdx + 1; // +1 because slot 0 is command
+                    const argSlot = slots[argSlotIndex];
+
+                    if (argSlot) {
+                        // Replace the current argument with the completion
+                        const before = state().input.slice(0, argSlot.startIndex);
+                        const after = state().input.slice(argSlot.endIndex);
+                        const newInput = `${before}${completionValue}${after}`;
+                        actions.setInput(newInput, before.length + completionValue.length);
+                        return true;
+                    }
+                    // No existing arg slot - append
+                    const inp = state().input;
+                    const needsSpace = inp.length > 0 && !inp.endsWith(" ");
+                    const newInput = inp + (needsSpace ? " " : "") + completionValue;
+                    actions.setInput(newInput);
                     return true;
                 }
-                // No existing arg slot - append
-                const inp = state().input;
-                const needsSpace = inp.length > 0 && !inp.endsWith(" ");
-                const newInput = inp + (needsSpace ? " " : "") + ghost.paramCompletion.value;
-                actions.setInput(newInput);
-                return true;
             }
         }
 
         // Command completion
-        if (ghost.mode === "completion" && cmd && derived.isCommandSlot()) {
-            const newCmd = cmd + ghost.text;
+        if (ghost.mode === "command-completion" && cmd) {
+            const newCmd = cmd + ghost.commandText;
             const beforeCmd = state().input.slice(0, parsed.slots[0]?.startIndex ?? 0);
             const afterCmd = state().input.slice(parsed.slots[0]?.endIndex ?? 0);
             actions.setInput(`${beforeCmd}${newCmd} ${afterCmd.trimStart()}`);
@@ -69,10 +74,10 @@ function createCliStore() {
         }
 
         // Command replacement (fuzzy match)
-        if (ghost.mode === "replacement" && cmd && derived.isCommandSlot()) {
+        if (ghost.mode === "command-replacement" && cmd) {
             const beforeCmd = state().input.slice(0, parsed.slots[0]?.startIndex ?? 0);
             const afterCmd = state().input.slice(parsed.slots[0]?.endIndex ?? 0);
-            actions.setInput(`${beforeCmd}${ghost.text} ${afterCmd.trimStart()}`);
+            actions.setInput(`${beforeCmd}${ghost.commandText} ${afterCmd.trimStart()}`);
             return true;
         }
 
@@ -93,7 +98,7 @@ function createCliStore() {
         // Save to history
         actions.addToHistory(inp);
 
-        // Math expression - copy result, clear input, but DON'T close
+        // Math expression - copy result, clear input
         const mathRes = derived.mathResult();
         if (mathRes !== null) {
             try {
