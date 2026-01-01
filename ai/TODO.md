@@ -15,44 +15,49 @@
 
 ---
 
-## Phase 1 – CLI Engine (S002)
+## ✅ Phase 1 – CLI Engine (S002)
 
-CLI ist das primäre Interface – muss zuerst stehen.
+CLI ist das primäre Interface – fertig implementiert.
 
 ### 1.1 Action Registry
 
-- [ ] **Action Interface definieren**
+- [x] **Action Interface definieren**
   - `id`, `aliases`, `params[]`, `handler`
   - Parameter: `name`, `type`, `default`, `optional`
-- [ ] **Action Registry Service**
+- [x] **Action Registry Service**
   - `registerAction(action)`
   - `getAction(id | alias)`
   - `getAllActions()` für Autocomplete
 
 ### 1.2 CLI Parser Engine
 
-- [ ] **Slot Parser**
+- [x] **Slot Parser**
   - Space-separated slots
   - Quoted strings handling (`"Mathe Notizen"`)
   - Slot 0 = Command, Slot 1..n = Arguments
-- [ ] **Fuzzy Search**
+- [x] **Fuzzy Search**
   - Exact match > Prefix match > Fuzzy match
   - Scoring für Autocomplete-Reihenfolge
 
 ### 1.3 CLI UI & Ghost Text
 
-- [ ] **CLI Overlay Component**
+- [x] **CLI Overlay Component**
   - Command Mode toggle (`Ctrl + .`)
   - Single-line input mit Animation
-- [ ] **Ghost Text Engine**
+- [x] **Ghost Text Engine**
   - Completion vs Replacement
   - Parameter hints
-- [ ] **History** (Arrow up/down, localStorage)
+- [x] **History** (Arrow up/down, localStorage)
 
 ### 1.4 Basic Commands
 
-- [ ] `help` – Liste aller Commands
-- [ ] `math [expr]` – Inline-Berechnung
+- [x] `help` – Liste aller Commands
+- [x] Inline-Math mit `=` Suffix
+
+### 1.5 Tests
+
+- [x] Unit Tests (62 tests passing)
+  - slot-parser, range-parser, fuzzy, math-eval, executor
 
 ---
 

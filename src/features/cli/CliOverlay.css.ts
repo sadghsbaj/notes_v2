@@ -82,6 +82,11 @@ globalStyle(`${input}::placeholder`, {
     color: themeContract.colors.textMuted,
 });
 
+globalStyle(`${input}::selection`, {
+    backgroundColor: "#6366f1", // Indigo-500
+    color: "#ffffff",
+});
+
 // =============================================================================
 // Ghost Text – Completion (inline after input)
 // =============================================================================
