@@ -15,6 +15,7 @@ class ActionRegistry {
     register(definition: ActionDefinition): void {
         const action: Action = {
             id: definition.id,
+            group: definition.group ?? "util",
             aliases: definition.aliases ?? [],
             description: definition.description ?? "",
             params: definition.params ?? [],

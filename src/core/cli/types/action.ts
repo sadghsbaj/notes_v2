@@ -1,6 +1,12 @@
 import { z } from "zod";
 
 // =============================================================================
+// Command Groups
+// =============================================================================
+
+export type CommandGroup = "filesystem" | "page" | "view" | "util";
+
+// =============================================================================
 // Parameter Types
 // =============================================================================
 
@@ -32,6 +38,7 @@ export type Param = z.infer<typeof ParamSchema>;
 
 export interface ActionDefinition {
     id: string;
+    group?: CommandGroup;
     aliases?: string[];
     description?: string;
     params?: Param[];
@@ -44,6 +51,7 @@ export interface ActionDefinition {
 
 export interface Action {
     id: string;
+    group: CommandGroup;
     aliases: string[];
     description: string;
     params: Param[];
