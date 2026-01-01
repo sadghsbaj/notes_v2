@@ -2,12 +2,34 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { createCliActions } from "../actions";
 import { type CliState, createCliStateSignal, initialCliState } from "../state";
 
+// Mock localStorage for tests
+const localStorageMock = (() => {
+    let store: Record<string, string> = {};
+    return {
+        getItem: (key: string) => store[key] ?? null,
+        setItem: (key: string, value: string) => {
+            store[key] = value;
+        },
+        clear: () => {
+            store = {};
+        },
+        removeItem: (key: string) => {
+            delete store[key];
+        },
+    };
+})();
+
+global.localStorage = localStorageMock as Storage;
+
 describe("CLI History Draft", () => {
     let state: () => CliState;
     let setState: (fn: (s: CliState) => CliState) => void;
     let actions: ReturnType<typeof createCliActions>;
 
     beforeEach(() => {
+        // Clear localStorage before each test
+        localStorage.clear();
+
         const signals = createCliStateSignal();
         state = signals.state;
         setState = signals.setState as (fn: (s: CliState) => CliState) => void;
