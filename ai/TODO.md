@@ -1,37 +1,35 @@
 # notes_v2 – Aktive TODOs
 
-> M1: Foundation ist fertig ✅
+> M2: Capacitor Setup ✅
 
 ---
 
-## ✅ Erledigt: M1 Foundation
+## ✅ Erledigt: M2 – Capacitor Setup
 
-- [x] Mode System (types, store, transitions)
-- [x] Input System (useKeyboard, keymap)
-- [x] App Shell (AppShell, PageCanvas, HudLayer)
-- [x] Mode Indicator HUD
-- [x] TypeScript kompiliert
+- [x] `@capacitor/core`, `@capacitor/cli`, `@capacitor/android` installiert
+- [x] `capacitor.config.ts` erstellt (webDir: dist, appId: dev.notes.v2)
+- [x] Android Platform hinzugefügt (`android/` Ordner)
+- [x] Build-Scripts in `package.json`:
+  - `cap:sync` – Build + Sync
+  - `cap:build` – Gradle assembleDebug
+  - `cap:apk` – Kompletter Build-Flow
+- [x] Debug APK erfolgreich gebaut
 
 ---
 
-## 🎯 Nächster Schritt: Testen
+## 🔧 Build Commands
 
-Starte den Dev-Server und teste:
 ```bash
-bun dev
+bun run cap:sync   # Web bauen + Android sync
+bun run cap:build  # Debug APK bauen
+bun run cap:apk    # Alles in einem
 ```
 
-**Keyboard-Test:**
-1. `i` → Insert (grün)
-2. `Escape` → Normal
-3. `e` → Edit (blau)
-4. `p` → Page Sub-Mode
-5. `:` → Command (pink)
+APK Pfad: `android/app/build/outputs/apk/debug/app-debug.apk`
 
 ---
 
-## ⏭️ Danach (M2/M3)
-
+## ⏭️ Nächster Schritt: M3 Core System
 - [ ] CLI Overlay (S002)
 - [ ] Document Model (S003)
 - [ ] Filesystem UI (S011)

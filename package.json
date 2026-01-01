@@ -1,31 +1,37 @@
 {
-  "name": "notes_v2",
-  "private": true,
-  "version": "0.1.0",
-  "packageManager": "bun@1.1.38",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "lint": "biome check .",
-    "lint:fix": "biome check --write .",
-    "format": "biome format --write .",
-    "test": "vitest",
-    "test:ui": "vitest --ui"
-  },
-  "dependencies": {
-    "motion": "^12.23.26",
-    "solid-js": "^1.9.3",
-    "solid-transition-group": "^0.3.0"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@vanilla-extract/css": "^1.16.2",
-    "@vanilla-extract/vite-plugin": "^4.0.18",
-    "typescript": "^5.7.2",
-    "vite": "^6.0.7",
-    "vite-plugin-solid": "^2.11.0",
-    "vitest": "^2.1.8"
-  }
+    "name": "notes_v2",
+    "private": true,
+    "version": "0.1.0",
+    "packageManager": "bun@1.1.38",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "lint": "biome check .",
+        "lint:fix": "biome check --write .",
+        "format": "biome format --write .",
+        "test": "vitest",
+        "test:ui": "vitest --ui",
+        "cap:sync": "bun run build && npx cap sync",
+        "cap:build": "cd android && ./gradlew assembleDebug",
+        "cap:apk": "bun run cap:sync && bun run cap:build"
+    },
+    "dependencies": {
+        "@capacitor/android": "^8.0.0",
+        "@capacitor/cli": "^8.0.0",
+        "@capacitor/core": "^8.0.0",
+        "motion": "^12.23.26",
+        "solid-js": "^1.9.3",
+        "solid-transition-group": "^0.3.0"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^1.9.4",
+        "@vanilla-extract/css": "^1.16.2",
+        "@vanilla-extract/vite-plugin": "^4.0.18",
+        "typescript": "^5.7.2",
+        "vite": "^6.0.7",
+        "vite-plugin-solid": "^2.11.0",
+        "vitest": "^2.1.8"
+    }
 }

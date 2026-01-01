@@ -6,21 +6,21 @@
 
 ---
 
-## M1: Foundation (Shell & Input)
+## M1: Foundation (Shell & Input) ✅
 **Ziel:** Die Basis-UI steht und die Input-Pipeline funktioniert.
 
-- [ ] **App Shell & Layout** (S005, S009)
+- [x] **App Shell & Layout** (S005, S009)
     - Basic Layout mit festem Page-Space (800px).
     - HUD-Overlay System.
-- [ ] **Input & Modes** (S001)
+- [x] **Input & Modes** (S001)
     - Global Key Listener & Mode State (Normal, Edit, Insert, Command).
     - Mode Indicator UI.
 
-## M2: Capacitor Setup (Basic)
+## M2: Capacitor Setup (Basic) ✅
 **Ziel:** Die App läuft als Android-App (noch ohne native Plugins).
 
-- [ ] **Capacitor Init**
-- [ ] **Android Project Structure**
+- [x] **Capacitor Init**
+- [x] **Android Project Structure**
     - Ordner-Struktur für Android-Builds aufsetzen.
     - Erste APK bauen und auf Tablet testen (Hello World Level).
 
