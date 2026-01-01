@@ -17,7 +17,7 @@ class ActionRegistry {
             group: definition.group ?? "util",
             description: definition.description ?? "",
             params: definition.params ?? [],
-            confirm: definition.confirm ?? false,
+            confirm: definition.confirm,
             handler: definition.handler,
         };
 

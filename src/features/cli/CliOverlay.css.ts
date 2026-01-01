@@ -225,6 +225,56 @@ export const helpOption = style({
 });
 
 // =============================================================================
+// Confirmation Layer (replaces input when active)
+// =============================================================================
+
+export const confirmLayer = style({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flex: 1,
+    gap: spacing.md,
+});
+
+export const confirmMessage = style({
+    fontFamily: typography.fontFamily.mono,
+    fontSize: typography.fontSize.sm,
+    fontWeight: typography.fontWeight.medium,
+    color: themeContract.colors.textPrimary,
+    whiteSpace: "nowrap",
+});
+
+export const confirmChoices = style({
+    display: "flex",
+    gap: spacing.xs,
+    flexShrink: 0,
+});
+
+export const confirmChoice = style({
+    display: "flex",
+    alignItems: "center",
+    gap: "4px",
+    padding: `4px ${spacing.sm}`,
+    borderRadius: radius.sm,
+    backgroundColor: themeContract.colors.appBg,
+    border: `1px solid ${themeContract.colors.pageBorder}`,
+});
+
+export const confirmKey = style({
+    fontFamily: typography.fontFamily.mono,
+    fontSize: typography.fontSize.xs,
+    fontWeight: typography.fontWeight.bold,
+    color: themeContract.colors.accentCommandMode,
+    textTransform: "uppercase",
+});
+
+export const confirmLabel = style({
+    fontFamily: typography.fontFamily.mono,
+    fontSize: typography.fontSize.xs,
+    color: themeContract.colors.textSecondary,
+});
+
+// =============================================================================
 // Animations
 // =============================================================================
 

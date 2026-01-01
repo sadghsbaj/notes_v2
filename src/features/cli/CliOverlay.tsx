@@ -8,13 +8,22 @@
 import { cliStore } from "@core/cli";
 import { Mode, modeStore } from "@core/mode";
 import { Terminal } from "lucide-solid";
-import { Show, createEffect, createSignal } from "solid-js";
+import { Show, createEffect, createSignal, onCleanup, onMount } from "solid-js";
 import * as styles from "./CliOverlay.css";
-import { CliError, CliHelpTooltip, CliInput, CliMathResult, CliParamHints, CliSuggestionBadge } from "./components";
+import {
+    CliConfirmation,
+    CliError,
+    CliHelpTooltip,
+    CliInput,
+    CliMathResult,
+    CliParamHints,
+    CliSuggestionBadge,
+} from "./components";
 import { useCliKeyboard } from "./hooks";
 
 export function CliOverlay() {
     const [isExiting, setIsExiting] = createSignal(false);
+    const isInConfirmation = () => cliStore.state().confirmation !== null;
 
     // Sync CLI with Command mode
     createEffect(() => {
@@ -26,6 +35,12 @@ export function CliOverlay() {
     });
 
     function handleClose() {
+        // If in confirmation, cancel it first
+        if (isInConfirmation()) {
+            cliStore.cancelConfirmation();
+            return;
+        }
+
         setIsExiting(true);
         setTimeout(() => {
             setIsExiting(false);
@@ -36,6 +51,22 @@ export function CliOverlay() {
 
     const { handleKeyDown } = useCliKeyboard({ onClose: handleClose });
 
+    // Global keyboard listener for confirmation mode
+    // (since CliInput is not rendered and can't capture keys)
+    createEffect(() => {
+        if (!isInConfirmation()) return;
+
+        function onGlobalKeyDown(e: KeyboardEvent) {
+            // Only handle when in confirmation mode
+            if (cliStore.state().confirmation) {
+                handleKeyDown(e);
+            }
+        }
+
+        window.addEventListener("keydown", onGlobalKeyDown);
+        onCleanup(() => window.removeEventListener("keydown", onGlobalKeyDown));
+    });
+
     return (
         <Show when={cliStore.isOpen() || isExiting()}>
             <div class={`${styles.overlay} ${isExiting() ? styles.exiting : styles.entering}`}>
@@ -43,11 +74,20 @@ export function CliOverlay() {
                 <div class={styles.inputContainer}>
                     <Terminal size={16} class={styles.icon} />
 
-                    <CliInput onKeyDown={handleKeyDown} />
-                    <CliSuggestionBadge />
-                    <CliParamHints />
-                    <CliMathResult />
-                    <CliError />
+                    <Show
+                        when={isInConfirmation()}
+                        fallback={
+                            <>
+                                <CliInput onKeyDown={handleKeyDown} />
+                                <CliSuggestionBadge />
+                                <CliParamHints />
+                                <CliMathResult />
+                                <CliError />
+                            </>
+                        }
+                    >
+                        <CliConfirmation />
+                    </Show>
                 </div>
             </div>
         </Show>

@@ -4,6 +4,8 @@
  * Composes state, actions, derived state, and execution logic.
  */
 
+import { actionRegistry } from "../registry/action-registry";
+import type { ConfirmConfig, ConfirmContext, ConfirmResolver } from "../types/confirm";
 import { createCliActions } from "./actions";
 import { createCliDerivedState } from "./derived";
 import { parseArgs } from "./executor";
@@ -22,6 +24,35 @@ function createCliStore() {
 
     // Actions
     const actions = createCliActions(state, setState, derived.suggestions);
+
+    // ==========================================================================
+    // Confirmation Context (for conditional confirmations)
+    // ==========================================================================
+
+    function getConfirmContext(): ConfirmContext {
+        return {
+            cwd: "/", // TODO: Get from filesystem service when implemented
+        };
+    }
+
+    // ==========================================================================
+    // Resolve Confirmation Config
+    // ==========================================================================
+
+    async function resolveConfirmConfig(
+        confirm: ConfirmConfig | ConfirmResolver | undefined,
+        args: Record<string, unknown>
+    ): Promise<ConfirmConfig | null> {
+        if (!confirm) return null;
+
+        // If it's a function (resolver), call it
+        if (typeof confirm === "function") {
+            return await confirm(args, getConfirmContext());
+        }
+
+        // Static config
+        return confirm;
+    }
 
     // ==========================================================================
     // Completion Logic
@@ -124,9 +155,31 @@ function createCliStore() {
             return false;
         }
 
-        // Execute handler
+        // Check if confirmation is needed
+        const confirmConfig = await resolveConfirmConfig(action.confirm, args);
+        if (confirmConfig) {
+            // Enter confirmation mode instead of executing
+            actions.enterConfirmation(confirmConfig, action.id, args);
+            return true; // Don't close CLI, show confirmation
+        }
+
+        // Execute handler directly (no confirmation needed)
+        return await executeHandler(action.id, args);
+    }
+
+    // ==========================================================================
+    // Execute Handler (called after confirmation or directly)
+    // ==========================================================================
+
+    async function executeHandler(actionId: string, args: Record<string, unknown>, choice?: string): Promise<boolean> {
+        const action = actionRegistry.get(actionId);
+        if (!action) {
+            actions.setError(`Action nicht gefunden: ${actionId}`);
+            return false;
+        }
+
         try {
-            await action.handler(args);
+            await action.handler(args, choice);
             actions.clearInput();
         } catch (err) {
             const msg = err instanceof Error ? err.message : "Fehler";
@@ -135,6 +188,29 @@ function createCliStore() {
         }
 
         return true;
+    }
+
+    // ==========================================================================
+    // Handle Confirmation Choice
+    // ==========================================================================
+
+    async function handleConfirmChoice(choiceValue: string): Promise<boolean> {
+        const confirmation = state().confirmation;
+        if (!confirmation) return false;
+
+        const { pendingActionId, pendingArgs } = confirmation;
+
+        // Cancel choices should just exit confirmation
+        if (choiceValue === "cancel") {
+            actions.cancelConfirmation();
+            return true;
+        }
+
+        // Clear confirmation state
+        actions.cancelConfirmation();
+
+        // Execute the pending action with the choice
+        return await executeHandler(pendingActionId, pendingArgs, choiceValue);
     }
 
     // ==========================================================================
@@ -154,6 +230,7 @@ function createCliStore() {
         // Command execution
         applyCompletion,
         execute,
+        handleConfirmChoice,
     };
 }
 

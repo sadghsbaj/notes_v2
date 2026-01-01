@@ -1,4 +1,5 @@
 import type { Setter } from "solid-js";
+import type { ConfirmConfig } from "../types/confirm";
 import type { CliState } from "./state";
 
 // =============================================================================
@@ -14,11 +15,12 @@ export function createCliActions(state: () => CliState, setState: Setter<CliStat
             cursorPosition: 0,
             historyIndex: -1,
             errorMessage: null,
+            confirmation: null,
         }));
     }
 
     function close(): void {
-        setState((s) => ({ ...s, isOpen: false, errorMessage: null }));
+        setState((s) => ({ ...s, isOpen: false, errorMessage: null, confirmation: null }));
     }
 
     function setInput(value: string, cursor?: number): void {
@@ -125,6 +127,29 @@ export function createCliActions(state: () => CliState, setState: Setter<CliStat
         }));
     }
 
+    // =========================================================================
+    // Confirmation Actions
+    // =========================================================================
+
+    function enterConfirmation(config: ConfirmConfig, actionId: string, args: Record<string, unknown>): void {
+        setState((s) => ({
+            ...s,
+            confirmation: {
+                config,
+                pendingActionId: actionId,
+                pendingArgs: args,
+            },
+        }));
+    }
+
+    function cancelConfirmation(): void {
+        setState((s) => ({ ...s, confirmation: null }));
+    }
+
+    function isInConfirmation(): boolean {
+        return state().confirmation !== null;
+    }
+
     return {
         open,
         close,
@@ -138,6 +163,10 @@ export function createCliActions(state: () => CliState, setState: Setter<CliStat
         historyDown,
         addToHistory,
         clearInput,
+        // Confirmation
+        enterConfirmation,
+        cancelConfirmation,
+        isInConfirmation,
     };
 }
 

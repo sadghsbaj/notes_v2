@@ -6,6 +6,7 @@
  */
 
 import { actionRegistry } from "../registry/action-registry";
+import { CONFIRM_DELETE, CONFIRM_OVERWRITE } from "../types/confirm";
 
 // =============================================================================
 // cd - Change Directory
@@ -57,13 +58,11 @@ actionRegistry.register({
     id: "rm",
     group: "filesystem",
     description: "Datei oder Ordner löschen",
-    confirm: "delete",
-    params: [
-        { name: "path", type: "path", optional: false, hint: "Pfad zum Löschen" },
-        { name: "force", type: "boolean", optional: true, default: false, hint: "Ohne Bestätigung" },
-    ],
-    handler: (args) => {
-        console.log("[rm]", args["path"], args["force"] ? "(force)" : "");
+    confirm: CONFIRM_DELETE,
+    params: [{ name: "path", type: "path", optional: false, hint: "Pfad zum Löschen" }],
+    handler: (args, choice) => {
+        if (choice === "cancel") return;
+        console.log("[rm]", args["path"], choice ? `(choice: ${choice})` : "");
     },
 });
 
@@ -75,13 +74,15 @@ actionRegistry.register({
     id: "mv",
     group: "filesystem",
     description: "Verschieben oder umbenennen",
-    confirm: "overwrite",
+    // TODO: Make conditional when filesystem service is available
+    confirm: CONFIRM_OVERWRITE,
     params: [
         { name: "src", type: "path", optional: false, hint: "Quelle" },
         { name: "dest", type: "path", optional: false, hint: "Ziel" },
     ],
-    handler: (args) => {
-        console.log("[mv]", args["src"], "→", args["dest"]);
+    handler: (args, choice) => {
+        if (choice === "cancel") return;
+        console.log("[mv]", args["src"], "→", args["dest"], choice ? `(choice: ${choice})` : "");
     },
 });
 
@@ -93,13 +94,15 @@ actionRegistry.register({
     id: "cp",
     group: "filesystem",
     description: "Kopieren",
-    confirm: "overwrite",
+    // TODO: Make conditional when filesystem service is available
+    confirm: CONFIRM_OVERWRITE,
     params: [
         { name: "src", type: "path", optional: false, hint: "Quelle" },
         { name: "dest", type: "path", optional: false, hint: "Ziel" },
     ],
-    handler: (args) => {
-        console.log("[cp]", args["src"], "→", args["dest"]);
+    handler: (args, choice) => {
+        if (choice === "cancel") return;
+        console.log("[cp]", args["src"], "→", args["dest"], choice ? `(choice: ${choice})` : "");
     },
 });
 

@@ -2,10 +2,10 @@
  * CLI Keyboard Hook
  *
  * Handles keyboard events for the CLI overlay.
+ * In confirmation mode, only accepts choice keys or Escape.
  */
 
 import { cliStore } from "@core/cli";
-import { modeStore } from "@core/mode";
 
 export interface UseCliKeyboardOptions {
     onClose: () => void;
@@ -13,6 +13,27 @@ export interface UseCliKeyboardOptions {
 
 export function useCliKeyboard(options: UseCliKeyboardOptions) {
     function handleKeyDown(e: KeyboardEvent) {
+        const confirmation = cliStore.state().confirmation;
+
+        // Confirmation mode - only accept choice keys or Escape
+        if (confirmation) {
+            e.preventDefault();
+
+            if (e.key === "Escape") {
+                cliStore.cancelConfirmation();
+                return;
+            }
+
+            // Check if key matches any choice
+            const choice = confirmation.config.choices.find((c) => c.key.toLowerCase() === e.key.toLowerCase());
+
+            if (choice) {
+                cliStore.handleConfirmChoice(choice.value);
+            }
+            return;
+        }
+
+        // Normal mode
         switch (e.key) {
             case "Escape":
                 e.preventDefault();

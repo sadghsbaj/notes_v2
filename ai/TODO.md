@@ -96,6 +96,24 @@ CLI ist das primäre Interface – fertig implementiert.
   - Misst jetzt die tatsächliche `?` Zeichenbreite
   - Berechnet exakte Mitte: `widthWithQuestion - questionMarkWidth / 2`
 
+### 1.8 CLI Confirmation System
+
+Inline Bestätigungslogik für destruktive Commands (rm, mv overwrite, etc.)
+
+- [ ] **Types definieren** – `ConfirmationConfig`, `ConfirmChoice`, Pre-builts (CONFIRM_DELETE, CONFIRM_OVERWRITE)
+- [ ] **State erweitern** – `confirmationState` in CliState + enter/exit Actions
+- [ ] **Execute Flow** – Check für `action.confirm`, trigger confirmation vor handler execution
+- [ ] **Keyboard Handling** – Keys abfangen in confirmation mode (y/n/o/r/c), Escape = cancel
+- [ ] **UI Component** – `CliConfirmation` zeigt Message + Choices inline statt Input
+- [ ] **Commands updaten** – rm mit `CONFIRM_DELETE`, mv mit conditional confirmation bei overwrite
+- [ ] **Styles** – confirmLayer, confirmMessage, confirmKey/Label Pills
+
+**Design:**
+- Keine force-flags, nur single-key confirmations (y/n/c)
+- Conditional confirmations (nur wenn nötig, z.B. bei overwrite)
+- CLI ersetzt Input mit Confirmation Layer (inline, kein Overlay)
+- Handler bekommt `confirmChoice` als zweites Argument
+
 ---
 
 ## Phase 2 – Filesystem (S011)

@@ -1,4 +1,5 @@
 import { createSignal } from "solid-js";
+import type { ConfirmationState } from "../types/confirm";
 
 // =============================================================================
 // CLI State Types
@@ -21,6 +22,8 @@ export interface CliState {
     selectedSuggestionIndex: number;
     /** Error message to display */
     errorMessage: string | null;
+    /** Active confirmation state (null = not in confirmation mode) */
+    confirmation: ConfirmationState | null;
 }
 
 export const initialCliState: CliState = {
@@ -32,6 +35,7 @@ export const initialCliState: CliState = {
     inputDraft: null,
     selectedSuggestionIndex: 0,
     errorMessage: null,
+    confirmation: null,
 };
 
 // =============================================================================

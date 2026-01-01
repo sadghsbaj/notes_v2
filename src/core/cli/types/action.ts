@@ -1,21 +1,11 @@
 import { z } from "zod";
+import type { ConfirmConfig, ConfirmResolver } from "./confirm";
 
 // =============================================================================
 // Command Groups
 // =============================================================================
 
 export type CommandGroup = "filesystem" | "page" | "view" | "util";
-
-// =============================================================================
-// Confirmation Types
-// =============================================================================
-
-/** When a command needs user confirmation before executing */
-export type ConfirmationType =
-    | "delete" // Deleting files/pages
-    | "overwrite" // Overwriting existing content
-    | "destructive" // Other destructive actions
-    | false; // No confirmation needed
 
 // =============================================================================
 // Parameter Types
@@ -128,9 +118,10 @@ export interface ActionDefinition {
     group?: CommandGroup;
     description?: string;
     params?: ParamRuntime[];
-    /** If set, command needs inline confirmation before executing */
-    confirm?: ConfirmationType;
-    handler: (args: Record<string, unknown>) => void | Promise<void>;
+    /** Confirmation config or resolver function (for conditional confirmations) */
+    confirm?: ConfirmConfig | ConfirmResolver;
+    /** Handler receives args and optional choice value if confirmation was shown */
+    handler: (args: Record<string, unknown>, choice?: string) => void | Promise<void>;
 }
 
 // =============================================================================
@@ -142,6 +133,8 @@ export interface Action {
     group: CommandGroup;
     description: string;
     params: ParamRuntime[];
-    confirm: ConfirmationType;
-    handler: (args: Record<string, unknown>) => void | Promise<void>;
+    /** Confirmation config or resolver (undefined = no confirmation) */
+    confirm: ConfirmConfig | ConfirmResolver | undefined;
+    /** Handler receives args and optional choice value if confirmation was shown */
+    handler: (args: Record<string, unknown>, choice?: string) => void | Promise<void>;
 }
