@@ -2,9 +2,10 @@
  * Parameter Completion Matching
  *
  * Provides fuzzy matching and completion logic for CLI parameter values.
- * Used by derived state to generate ghost text for parameter autocomplete.
+ * Uses fuzzysort for consistent matching with command search.
  */
 
+import fuzzysort from "fuzzysort";
 import type { ParamRuntime } from "../types/action";
 
 // =============================================================================
@@ -19,32 +20,6 @@ export function getParamOptions(param: ParamRuntime): string[] {
         return param.help.options;
     }
     return [];
-}
-
-/**
- * Simple similarity check for typo detection.
- * Checks if input is "similar enough" to target to suggest as typo fix.
- */
-function isSimilar(input: string, target: string): boolean {
-    const inputLower = input.toLowerCase();
-    const targetLower = target.toLowerCase();
-
-    // If lengths are too different, not similar
-    if (Math.abs(inputLower.length - targetLower.length) > 2) {
-        return false;
-    }
-
-    // Count matching characters
-    let matches = 0;
-    for (const char of inputLower) {
-        if (targetLower.includes(char)) {
-            matches++;
-        }
-    }
-
-    // If more than 70% of chars match, consider similar
-    const threshold = Math.min(inputLower.length, targetLower.length) * 0.7;
-    return matches >= threshold && inputLower.length >= 2;
 }
 
 // =============================================================================
@@ -65,8 +40,7 @@ export interface ParamMatchResult {
  * Priority:
  * 1. Exact match → null (no completion needed)
  * 2. Prefix match → { value, isPrefix: true }
- * 3. Contains match → { value, isPrefix: false }
- * 4. Typo match → { value, isPrefix: false }
+ * 3. Fuzzy match (via fuzzysort) → { value, isPrefix: false }
  */
 export function findParamMatch(input: string, options: string[]): ParamMatchResult | null {
     if (options.length === 0 || input === "" || input === "?") {
@@ -82,7 +56,7 @@ export function findParamMatch(input: string, options: string[]): ParamMatchResu
         }
     }
 
-    // First: exact prefix match
+    // First: exact prefix match (highest priority after exact)
     for (const opt of options) {
         const optLower = opt.toLowerCase();
         if (optLower.startsWith(inputLower) && optLower !== inputLower) {
@@ -90,19 +64,18 @@ export function findParamMatch(input: string, options: string[]): ParamMatchResu
         }
     }
 
-    // Second: contains/fuzzy match (not prefix)
-    for (const opt of options) {
-        const optLower = opt.toLowerCase();
-        if (optLower.includes(inputLower) && !optLower.startsWith(inputLower)) {
-            return { value: opt, isPrefix: false };
-        }
-    }
+    // Second: fuzzy match via fuzzysort (handles typos, subsequences, etc.)
+    // Only search options that aren't already matched above
+    const nonPrefixOptions = options.filter((opt) => !opt.toLowerCase().startsWith(inputLower));
 
-    // Third: check for typos - simple Levenshtein-like detection
-    // If input is similar enough to an option (e.g., "cntent" vs "content")
-    for (const opt of options) {
-        if (isSimilar(input, opt)) {
-            return { value: opt, isPrefix: false };
+    if (nonPrefixOptions.length > 0) {
+        const fuzzyResults = fuzzysort.go(input, nonPrefixOptions, {
+            threshold: -5000, // Fairly lenient for short option strings
+            limit: 1,
+        });
+
+        if (fuzzyResults.length > 0 && fuzzyResults[0]) {
+            return { value: fuzzyResults[0].target, isPrefix: false };
         }
     }
 

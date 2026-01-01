@@ -86,9 +86,9 @@ CLI ist das primäre Interface – fertig implementiert.
 - [x] **Number Parsing Deduplizierung** – Normalisierung nicht doppelt machen ✅
   - `ValidationResult` hat jetzt `normalized` Feld
   - `validateNumber` gibt parsed number zurück, Executor nutzt es direkt
-- [ ] **fuzzysort für Param Matching** – isSimilar() durch fuzzysort ersetzen
-  - Konsistente Fuzzy-Logik wie bei Commands
-  - Bessere Typo-Toleranz
+- [x] **fuzzysort für Param Matching** – isSimilar() durch fuzzysort ersetzen ✅
+  - Nutzt jetzt `fuzzysort.go()` wie bei Commands
+  - Konsistente Fuzzy-Logik, bessere Typo-Toleranz
 - [ ] **Param Types vereinfachen** – ParamDefinition vs ParamRuntime klären
   - Drei ähnliche Types: Param, ParamDefinition, ParamRuntime
   - Verwirrend, warum ParamDefinition UND ParamRuntime?
