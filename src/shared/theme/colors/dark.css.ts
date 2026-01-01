@@ -29,6 +29,8 @@ export const darkTheme = createTheme(themeContract, {
         accentEditMode: "hsl(217, 91%, 65%)", // blue-400
         accentInsertMode: "hsl(142, 71%, 50%)", // green-400
         accentCommandMode: "hsl(239, 84%, 72%)", // indigo-400
+        accentCommandModeLight: "hsl(239, 40%, 25%)", // dark indigo for bg
+        accentCommandModeDark: "hsl(239, 84%, 80%)", // light indigo for text
 
         // Interactive
         focusRing: "hsl(217, 91%, 65%)", // blue-400

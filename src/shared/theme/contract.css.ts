@@ -22,6 +22,8 @@ export const themeContract = createThemeContract({
         accentEditMode: null,
         accentInsertMode: null,
         accentCommandMode: null,
+        accentCommandModeLight: null, // Light bg for active params
+        accentCommandModeDark: null, // Dark text on light bg
 
         // Interactive
         focusRing: null,

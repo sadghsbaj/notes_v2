@@ -152,10 +152,10 @@ export const paramActive = style({
     fontFamily: typography.fontFamily.mono,
     fontSize: typography.fontSize.xs,
     fontWeight: typography.fontWeight.semibold,
-    color: "#ffffff",
+    color: themeContract.colors.accentCommandModeDark,
     padding: `4px ${spacing.sm}`,
     borderRadius: radius.sm,
-    backgroundColor: themeContract.colors.accentCommandMode,
+    backgroundColor: themeContract.colors.accentCommandModeLight,
 });
 
 // =============================================================================
