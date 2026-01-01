@@ -1,7 +1,6 @@
 // CLI Commands – Auto-register on import
 
 // Built-in commands
-import "./help";
 import "./filesystem";
 import "./page";
 
