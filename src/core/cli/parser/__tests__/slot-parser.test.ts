@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getArgs, getCommand, getCurrentArgIndex, isInCommandSlot, parseInput } from "./slot-parser";
+import { getArgs, getCommand, getCurrentArgIndex, isInCommandSlot, parseInput } from "../slot-parser";
 
 describe("slot-parser", () => {
     describe("parseInput", () => {
@@ -12,30 +12,30 @@ describe("slot-parser", () => {
         it("parses single word", () => {
             const result = parseInput("help", 4);
             expect(result.slots).toHaveLength(1);
-            expect(result.slots[0].value).toBe("help");
-            expect(result.slots[0].isQuoted).toBe(false);
+            expect(result.slots[0]?.value).toBe("help");
+            expect(result.slots[0]?.isQuoted).toBe(false);
         });
 
         it("parses multiple words", () => {
             const result = parseInput("goto page 5", 11);
             expect(result.slots).toHaveLength(3);
-            expect(result.slots[0].value).toBe("goto");
-            expect(result.slots[1].value).toBe("page");
-            expect(result.slots[2].value).toBe("5");
+            expect(result.slots[0]?.value).toBe("goto");
+            expect(result.slots[1]?.value).toBe("page");
+            expect(result.slots[2]?.value).toBe("5");
         });
 
         it("handles quoted strings as single slot", () => {
             const result = parseInput('echo "hello world"', 18);
             expect(result.slots).toHaveLength(2);
-            expect(result.slots[0].value).toBe("echo");
-            expect(result.slots[1].value).toBe("hello world");
-            expect(result.slots[1].isQuoted).toBe(true);
+            expect(result.slots[0]?.value).toBe("echo");
+            expect(result.slots[1]?.value).toBe("hello world");
+            expect(result.slots[1]?.isQuoted).toBe(true);
         });
 
         it("handles quotes with spaces inside", () => {
             const result = parseInput('search "multi word query"', 25);
             expect(result.slots).toHaveLength(2);
-            expect(result.slots[1].value).toBe("multi word query");
+            expect(result.slots[1]?.value).toBe("multi word query");
         });
 
         it("tracks cursor in first slot", () => {
@@ -76,8 +76,8 @@ describe("slot-parser", () => {
             const parsed = parseInput("goto 5 10", 9);
             const args = getArgs(parsed);
             expect(args).toHaveLength(2);
-            expect(args[0].value).toBe("5");
-            expect(args[1].value).toBe("10");
+            expect(args[0]?.value).toBe("5");
+            expect(args[1]?.value).toBe("10");
         });
     });
 

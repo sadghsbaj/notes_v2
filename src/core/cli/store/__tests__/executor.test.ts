@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { Param } from "../types/action";
-import type { Slot } from "../types/slot";
-import { parseArgs } from "./executor";
+import type { Param } from "../../types/action";
+import type { Slot } from "../../types/slot";
+import { parseArgs } from "../executor";
 
 // Helper to create slots
 const slot = (value: string): Slot => ({
@@ -19,7 +19,7 @@ describe("executor", () => {
             const slots = [slot("hello")];
             const result = parseArgs(params, slots);
             expect(result.error).toBeNull();
-            expect(result.args.text).toBe("hello");
+            expect(result.args["text"]).toBe("hello");
         });
 
         it("parses number param with dot", () => {
@@ -27,7 +27,7 @@ describe("executor", () => {
             const slots = [slot("5.7")];
             const result = parseArgs(params, slots);
             expect(result.error).toBeNull();
-            expect(result.args.num).toBe(5.7);
+            expect(result.args["num"]).toBe(5.7);
         });
 
         it("parses number param with comma", () => {
@@ -35,7 +35,7 @@ describe("executor", () => {
             const slots = [slot("5,7")];
             const result = parseArgs(params, slots);
             expect(result.error).toBeNull();
-            expect(result.args.num).toBe(5.7);
+            expect(result.args["num"]).toBe(5.7);
         });
 
         it("parses boolean param true", () => {
@@ -43,21 +43,21 @@ describe("executor", () => {
             const slots = [slot("true")];
             const result = parseArgs(params, slots);
             expect(result.error).toBeNull();
-            expect(result.args.flag).toBe(true);
+            expect(result.args["flag"]).toBe(true);
         });
 
         it("parses boolean param 1", () => {
             const params: Param[] = [{ name: "flag", type: "boolean", optional: false }];
             const slots = [slot("1")];
             const result = parseArgs(params, slots);
-            expect(result.args.flag).toBe(true);
+            expect(result.args["flag"]).toBe(true);
         });
 
         it("parses boolean param ja", () => {
             const params: Param[] = [{ name: "flag", type: "boolean", optional: false }];
             const slots = [slot("ja")];
             const result = parseArgs(params, slots);
-            expect(result.args.flag).toBe(true);
+            expect(result.args["flag"]).toBe(true);
         });
 
         it("uses default for missing optional param", () => {
@@ -65,7 +65,7 @@ describe("executor", () => {
             const slots: Slot[] = [];
             const result = parseArgs(params, slots);
             expect(result.error).toBeNull();
-            expect(result.args.opt).toBe("default");
+            expect(result.args["opt"]).toBe("default");
         });
 
         it("uses _ placeholder to skip to default", () => {
@@ -73,7 +73,7 @@ describe("executor", () => {
             const slots = [slot("_")];
             const result = parseArgs(params, slots);
             expect(result.error).toBeNull();
-            expect(result.args.opt).toBe("default");
+            expect(result.args["opt"]).toBe("default");
         });
 
         it("returns error for missing required param", () => {
@@ -98,8 +98,8 @@ describe("executor", () => {
             const slots = [slot("hello"), slot("42")];
             const result = parseArgs(params, slots);
             expect(result.error).toBeNull();
-            expect(result.args.a).toBe("hello");
-            expect(result.args.b).toBe(42);
+            expect(result.args["a"]).toBe("hello");
+            expect(result.args["b"]).toBe(42);
         });
     });
 });

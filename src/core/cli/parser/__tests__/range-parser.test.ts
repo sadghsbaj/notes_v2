@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isValidRangeString, parseRange } from "./range-parser";
+import { isValidRangeString, parseRange } from "../range-parser";
 
 describe("range-parser", () => {
     describe("parseRange", () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { evaluateMath, formatResult, isMathExpression, normalizeForEval } from "./math-eval";
+import { evaluateMath, formatResult, isMathExpression, normalizeForEval } from "../math-eval";
 
 describe("math-eval", () => {
     describe("normalizeForEval", () => {
