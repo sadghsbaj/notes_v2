@@ -143,7 +143,7 @@ export const param = style({
     fontFamily: typography.fontFamily.mono,
     fontSize: typography.fontSize.xs,
     color: themeContract.colors.textMuted,
-    padding: `2px ${spacing.xs}`,
+    padding: `4px ${spacing.sm}`,
     borderRadius: radius.sm,
     backgroundColor: themeContract.colors.appBg,
 });
@@ -152,8 +152,8 @@ export const paramActive = style({
     fontFamily: typography.fontFamily.mono,
     fontSize: typography.fontSize.xs,
     fontWeight: typography.fontWeight.semibold,
-    color: themeContract.colors.textPrimary,
-    padding: `2px ${spacing.xs}`,
+    color: "#ffffff",
+    padding: `4px ${spacing.sm}`,
     borderRadius: radius.sm,
     backgroundColor: themeContract.colors.accentCommandMode,
 });
