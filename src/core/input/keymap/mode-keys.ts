@@ -32,11 +32,11 @@ export const modeKeys: Keymap = new Map([
             description: "Enter Edit mode",
         },
     ],
-    // ctrl+. → Command (CLI)
+    // ctrl+. → Open CLI
     [
         "ctrl+.",
         {
-            action: { type: "setMode", mode: Mode.Command },
+            action: { type: "openCli" },
             modes: [Mode.Normal, Mode.Edit],
             description: "Open CLI (Command mode)",
         },

@@ -5,7 +5,7 @@
 import type { Mode } from "@core/mode";
 
 /** Action types that can be triggered by keys */
-export type KeyAction = { type: "setMode"; mode: Mode } | { type: "returnFromCommand" };
+export type KeyAction = { type: "setMode"; mode: Mode } | { type: "returnFromCommand" } | { type: "openCli" };
 
 /** Key identifier (lowercase, with modifiers prefixed) */
 export type KeyCombo = string;

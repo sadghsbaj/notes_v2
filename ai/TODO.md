@@ -4,51 +4,22 @@
 
 ---
 
-## Phase 1 – Document Model & Storage (S003)
+## ✅ Phase 0 – Document Model Schemas
 
-Das Fundament – ohne stabiles Datenmodell können CLI/Filesystem nichts persistieren.
-
-### 1.1 Document Model Core
-
-- [x] **Zod Schemas definieren** (Document, Page, Block, AssetRef) ✅
+- [x] **Zod Schemas definieren** ✅
   - `src/core/storage/schemas/` mit strikter Typisierung
-  - Page: id, widthPx, heightPx, rotation, background (union types)
-  - Block: id, anchor, rect, shape, styling, data
-  - AssetRef: id, type, filename, mimeType, meta
+  - Page, Block, Asset, Document, Meta, UiState
 - [x] **Entity Store Architektur** ✅
-  - Flat maps für O(1) lookup: `pages`, `blocks`, `assets`, `connections`
-  - `doc.pageOrder` als Array für Reihenfolge
-  - Extensibility: BlockShape, BlockConnection für Formen/Pfeile vorbereitet
-
-### 1.2 Persistence Layer
-
-- [ ] **AtomicWriter implementieren**
-  - write-to-temp → rename/replace pattern
-  - Capacitor Filesystem API wrappen
-  - Error handling (temp cleanup bei Fehler)
-- [ ] **DocumentRepository**
-  - `load(docId)` → Liest meta.json + content.json + ui.json
-  - `save(docId, snapshot)` → Atomic writes für alle geänderten files
-  - `listDocs()` → Alle Dokument-Ordner scannen
-- [ ] **SaveCoordinator**
-  - Dirty tracking (content, ui, meta getrennt)
-  - Debounced autosave (2-3s idle)
-  - Flush on doc switch / app background
-
-### 1.3 Migrations & Schema Versioning
-
-- [ ] **Migration Pipeline Setup**
-  - schemaVersion in meta.json
-  - migrate-on-read → validate → writeback
-  - Migration Registry: `migrations/v1-to-v2.ts` etc.
+  - Flat maps für O(1) lookup
+  - Extensibility: BlockShape, BlockConnection vorbereitet
 
 ---
 
-## Phase 2 – Action System & CLI (S002)
+## Phase 1 – CLI Engine (S002)
 
-CLI braucht Document Model für Actions. Baut darauf auf.
+CLI ist das primäre Interface – muss zuerst stehen.
 
-### 2.1 Action Registry
+### 1.1 Action Registry
 
 - [ ] **Action Interface definieren**
   - `id`, `aliases`, `params[]`, `handler`
@@ -58,7 +29,7 @@ CLI braucht Document Model für Actions. Baut darauf auf.
   - `getAction(id | alias)`
   - `getAllActions()` für Autocomplete
 
-### 2.2 CLI Parser Engine
+### 1.2 CLI Parser Engine
 
 - [ ] **Slot Parser**
   - Space-separated slots
@@ -68,90 +39,103 @@ CLI braucht Document Model für Actions. Baut darauf auf.
   - Exact match > Prefix match > Fuzzy match
   - Scoring für Autocomplete-Reihenfolge
 
-### 2.3 CLI UI & Ghost Text
+### 1.3 CLI UI & Ghost Text
 
 - [ ] **CLI Overlay Component**
   - Command Mode toggle (`Ctrl + .`)
-  - Single-line input
-  - Animation (slide/fade in)
+  - Single-line input mit Animation
 - [ ] **Ghost Text Engine**
-  - Completion: zeigt Rest (`page-a` → Ghost: `dd`)
-  - Replacement: zeigt vollen Term (`padd` → Ghost: `page-add`)
-  - Parameter hints (`page-add ` → Ghost: `**count** pos height`)
-- [ ] **History**
-  - Arrow up/down Navigation
-  - Session-persistent (localStorage)
+  - Completion vs Replacement
+  - Parameter hints
+- [ ] **History** (Arrow up/down, localStorage)
 
-### 2.4 Inline Math
-
-- [ ] **Math.js Integration**
-  - Trigger: `=` am Ende
-  - Display: `3*17= 51`
-  - Enter → Clipboard + clear
-
-### 2.5 Basic Commands
+### 1.4 Basic Commands
 
 - [ ] `help` – Liste aller Commands
-- [ ] `math [expr]` – Berechnung (alternative zu inline)
-- [ ] `page-add [count] [pos] [height]` – Seiten hinzufügen
+- [ ] `math [expr]` – Inline-Berechnung
 
 ---
 
-## Phase 3 – Filesystem UI & CLI (S011)
+## Phase 2 – Filesystem (S011)
 
-Baut auf CLI-Infrastruktur auf, nutzt Document Model für Bundles.
+Baut auf CLI auf. Ermöglicht Navigation + CRUD.
 
-### 3.1 LS Sidebar Component
+### 2.1 FileSystem Service
 
-- [ ] **Floating Sidebar Layout**
-  - Position: links, floating
-  - Header: aktueller Pfad
-  - Liste: Ordner (farbig) + Dateien
-  - `.note` Bundles als einzelne Dateien anzeigen
-- [ ] **Live Updates**
-  - Reactive zu CWD changes
-  - Animation bei Ordnerwechsel
+- [ ] **Capacitor Filesystem Wrapper**
+  - `readFile`, `writeFile`, `readDir`, `mkdir`, `deleteFile`, `rename`
+  - Error handling + Logging
+- [ ] **Web Fallback** (für Dev ohne Android)
+  - localStorage oder IndexedDB Mock
 
-### 3.2 Path Handling
+### 2.2 Path Handling
 
 - [ ] **Path Resolution Service**
   - Relative → Absolute paths
   - Bundle detection (`.note` Ordner = atomare Datei)
 - [ ] **Alias System (hardcoded)**
-  - `@mathe`, `@deutsch`, etc. → absolute paths
-  - Smart Date: `@mathe .` → auto-create heute's Ordner
+  - `@mathe`, `@deutsch` → absolute paths
+  - Smart Date: `@mathe .` → auto-create heute
 
-### 3.3 Navigation Commands
+### 2.3 Navigation Commands
 
 - [ ] `cd [path]` – Directory wechseln
-- [ ] `open [file]` – Dokument öffnen
+- [ ] `open [file]` – Dokument öffnen (→ trigger DocumentRepository.load)
 - [ ] `close` – Dokument schließen
 
-### 3.4 CRUD Commands
+### 2.4 CRUD Commands
 
 - [ ] `mkdir [name]` – Ordner erstellen
 - [ ] `touch [name]` – Leeres Dokument-Bundle erstellen
 - [ ] `mv [src] [dest]` – Verschieben/Umbenennen
 - [ ] `cp [src] [dest]` – Kopieren
-- [ ] `rm [path]` – Löschen (mit Bestätigung immer)
+- [ ] `rm [path]` – Löschen (mit Bestätigung)
 
-### 3.5 Safety System
+### 2.5 LS Sidebar UI
 
-- [ ] **Confirmation Dialogs**
-  - Inline in CLI: `Delete 'foo'? [y/N]`
-  - Overwrite warnings
-- [ ] **Protected Directories (hardcoded)**
-  - Block/erschwerte Bestätigung für Archive etc.
+- [ ] **Floating Sidebar Layout**
+  - Header: aktueller Pfad
+  - Liste: Ordner (farbig) + Dateien
+- [ ] **Live Updates** bei CWD changes
 
 ---
 
-## 🧠 Wartbarkeits-Prinzipien (für alle Phasen)
+## Phase 3 – Document Loading
+
+Wird von `open` Command getriggert.
+
+### 3.1 AtomicWriter
+
+- [ ] write-to-temp → rename pattern
+- [ ] Error handling (temp cleanup)
+
+### 3.2 DocumentRepository
+
+- [ ] `load(docId)` → Liest meta.json + content.json + ui.json
+- [ ] `listDocs()` → Alle Dokument-Ordner scannen
+- [ ] `save(docId, snapshot)` → Atomic writes
+
+### 3.3 Migration Pipeline
+
+- [ ] schemaVersion check
+- [ ] migrate-on-read → validate → writeback
+
+---
+
+## Phase 4 – Content & Save (später)
+
+- [ ] Page Rendering
+- [ ] Block System (Edit Mode)
+- [ ] SaveCoordinator (Dirty tracking, Autosave)
+
+---
+
+## 🧠 Wartbarkeits-Prinzipien
 
 1. **Single Responsibility**: Jede Datei = ein Zweck
-2. **Dependency Injection**: Services über Context/DI, nicht globale Importe
+2. **Dependency Injection**: Services über Context/DI
 3. **Zod Everywhere**: Alle Datenstrukturen validiert
-4. **Feature Folders**: `core/storage/`, `core/cli/`, `features/filesystem/`
-5. **Tests First für kritische Logik**: AtomicWriter, Migrations, Parser
+4. **Feature Folders**: `core/cli/`, `core/storage/`, `features/filesystem/`
 
 ---
 
@@ -160,9 +144,7 @@ Baut auf CLI-Infrastruktur auf, nutzt Document Model für Bundles.
 <details>
 <summary>Abgeschlossen</summary>
 
-- [x] `@capacitor/core`, `@capacitor/cli`, `@capacitor/android` installiert
-- [x] `capacitor.config.ts` erstellt (webDir: dist, appId: dev.notes.v2)
-- [x] Android Platform hinzugefügt (`android/` Ordner)
+- [x] Capacitor installiert + Android Platform
 - [x] Build-Scripts in `package.json`
 - [x] Debug APK erfolgreich gebaut
 

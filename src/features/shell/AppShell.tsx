@@ -6,6 +6,7 @@
  */
 
 import { useKeyboard } from "@core/input";
+import { CliOverlay } from "@features/cli";
 import { lightTheme } from "@theme/colors/light.css";
 import type { JSX } from "solid-js";
 import { contentArea, shellRoot } from "./AppShell.css";
@@ -26,6 +27,9 @@ export function AppShell(props: AppShellProps) {
 
             {/* Fixed HUD layer (mode indicator, overlays) */}
             <HudLayer />
+
+            {/* CLI Overlay */}
+            <CliOverlay />
         </div>
     );
 }

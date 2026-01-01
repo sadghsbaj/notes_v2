@@ -2,7 +2,9 @@
  * useKeyboard – Global keyboard input handler
  */
 
+import { cliStore } from "@core/cli";
 import { modeStore } from "@core/mode";
+import { Mode } from "@core/mode/types";
 import { onCleanup, onMount } from "solid-js";
 import { defaultKeymap, keyComboFromEvent } from "./keymap";
 import type { Keymap } from "./keymap";
@@ -52,6 +54,11 @@ export function useKeyboard(options: UseKeyboardOptions = {}) {
                 break;
             case "returnFromCommand":
                 modeStore.returnFromCommand();
+                handled = true;
+                break;
+            case "openCli":
+                modeStore.setMode(Mode.Command);
+                cliStore.open();
                 handled = true;
                 break;
         }
