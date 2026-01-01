@@ -7,11 +7,7 @@
     },
     "files": {
         "ignoreUnknown": false,
-        "ignore": [
-            "node_modules",
-            "dist",
-            ".capacitor"
-        ]
+        "ignore": ["node_modules", "dist", ".capacitor"]
     },
     "formatter": {
         "enabled": true,
@@ -29,6 +25,9 @@
             },
             "style": {
                 "noNonNullAssertion": "warn"
+            },
+            "complexity": {
+                "useLiteralKeys": "off"
             }
         }
     },
