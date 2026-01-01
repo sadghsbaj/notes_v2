@@ -8,7 +8,7 @@
 import { cliStore } from "@core/cli";
 import { Mode, modeStore } from "@core/mode";
 import { Terminal } from "lucide-solid";
-import { Show, createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import { Show, createEffect, createSignal, on, onCleanup } from "solid-js";
 import * as styles from "./CliOverlay.css";
 import {
     CliConfirmation,
@@ -53,19 +53,18 @@ export function CliOverlay() {
 
     // Global keyboard listener for confirmation mode
     // (since CliInput is not rendered and can't capture keys)
-    createEffect(() => {
-        if (!isInConfirmation()) return;
+    createEffect(
+        on(isInConfirmation, (inConfirm) => {
+            if (!inConfirm) return;
 
-        function onGlobalKeyDown(e: KeyboardEvent) {
-            // Only handle when in confirmation mode
-            if (cliStore.state().confirmation) {
+            function onGlobalKeyDown(e: KeyboardEvent) {
                 handleKeyDown(e);
             }
-        }
 
-        window.addEventListener("keydown", onGlobalKeyDown);
-        onCleanup(() => window.removeEventListener("keydown", onGlobalKeyDown));
-    });
+            window.addEventListener("keydown", onGlobalKeyDown);
+            onCleanup(() => window.removeEventListener("keydown", onGlobalKeyDown));
+        })
+    );
 
     return (
         <Show when={cliStore.isOpen() || isExiting()}>

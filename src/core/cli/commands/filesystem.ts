@@ -61,7 +61,6 @@ actionRegistry.register({
     confirm: CONFIRM_DELETE,
     params: [{ name: "path", type: "path", optional: false, hint: "Pfad zum Löschen" }],
     handler: (args, choice) => {
-        if (choice === "cancel") return;
         console.log("[rm]", args["path"], choice ? `(choice: ${choice})` : "");
     },
 });
@@ -81,7 +80,6 @@ actionRegistry.register({
         { name: "dest", type: "path", optional: false, hint: "Ziel" },
     ],
     handler: (args, choice) => {
-        if (choice === "cancel") return;
         console.log("[mv]", args["src"], "→", args["dest"], choice ? `(choice: ${choice})` : "");
     },
 });
@@ -101,7 +99,6 @@ actionRegistry.register({
         { name: "dest", type: "path", optional: false, hint: "Ziel" },
     ],
     handler: (args, choice) => {
-        if (choice === "cancel") return;
         console.log("[cp]", args["src"], "→", args["dest"], choice ? `(choice: ${choice})` : "");
     },
 });

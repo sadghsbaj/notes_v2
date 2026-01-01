@@ -61,20 +61,20 @@ export type ConfirmResolver = (
 
 /** Standard delete confirmation (y/n) */
 export const CONFIRM_DELETE: ConfirmConfig = {
-    message: "Wirklich löschen?",
+    message: "Delete?",
     choices: [
-        { key: "y", label: "Ja", value: "confirm" },
-        { key: "n", label: "Nein", value: "cancel" },
+        { key: "y", label: "Yes", value: "confirm" },
+        { key: "n", label: "No", value: "cancel" },
     ],
 };
 
 /** Overwrite confirmation with more options */
 export const CONFIRM_OVERWRITE: ConfirmConfig = {
-    message: "Datei existiert bereits",
+    message: "Already exists",
     choices: [
-        { key: "o", label: "Überschreiben", value: "overwrite" },
-        { key: "r", label: "Umbenennen", value: "rename" },
-        { key: "c", label: "Abbrechen", value: "cancel" },
+        { key: "o", label: "Overwrite", value: "overwrite" },
+        { key: "r", label: "Rename", value: "rename" },
+        { key: "c", label: "Cancel", value: "cancel" },
     ],
 };
 

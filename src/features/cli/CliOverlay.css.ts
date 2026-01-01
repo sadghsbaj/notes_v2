@@ -24,7 +24,7 @@ export const overlay = style({
     bottom: "18px",
     left: "50%",
     zIndex: zIndex.hud,
-    width: "min(480px, calc(100vw - 64px))",
+    width: "min(520px, calc(100vw - 64px))",
     pointerEvents: "auto",
 });
 
