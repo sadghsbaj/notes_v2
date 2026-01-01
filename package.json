@@ -15,7 +15,9 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
-    "solid-js": "^1.9.3"
+    "motion": "^12.23.26",
+    "solid-js": "^1.9.3",
+    "solid-transition-group": "^0.3.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

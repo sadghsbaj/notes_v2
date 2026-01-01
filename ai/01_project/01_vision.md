@@ -27,18 +27,15 @@ notes_v2 ist eine auf mich zugeschnittene, GoodNotes-artige Notizen-App für den
 
 - Keyboard-first und schneller als klassische Touch-Workflows.
 - Clean, hochwertig, flüssig (White/Dark Mode), mit HUD/Cockpit-Overlays.
-- Effizienz durch Modi/Shortcuts (Vim-inspired mit normal/edit/insert + Sub-Modi), WASD-Navigation, muscle memory > UI.
+- Effizienz durch Modi/Shortcuts (Vim-inspired mit Normal/Edit/Insert/Command), WASD-Navigation, muscle memory > UI.
 
 ## MVP – Kernfähigkeiten (erste nutzbare Version)
 
 - Lokale Speicherung: Dokumente/Seiten zuverlässig speichern und wieder öffnen (offline-only).
-- Tastatur-Navigation + Modus-Konzept (normal/edit/insert + Sub-Modi für Actions).
+- Tastatur-Navigation + Modus-Konzept (Normal/Edit/Insert/Command + CLI für Actions).
 - PDF importieren und als Seite anzeigen.
 - Block-System: Blöcke auf einer Seite positionieren (inkl. „auf PDF schreiben").
-- Mode-basiertes Action-System:
-  - Sub-Modi für Page/File/Calc/Block-Operationen (z.B. `p` → `a` = Page Add).
-  - Parameter via Ghost-Text (inline, minimale UI).
-  - Inline-Rechnen (z.B. `c` → `17*23` = 391 ins Clipboard).
+- CLI-basiertes Action-System: Alle komplexen Operationen über Command Mode (`:`).
 
 ## Später (Post-MVP / Experimente)
 

@@ -18,13 +18,10 @@ export const themeContract = createThemeContract({
         textSecondary: null,
         textMuted: null,
 
-        // Accents (Mode Badges) - Same across themes
-        accentEdit: null,
-        accentInsert: null,
-        accentPage: null,
-        accentFile: null,
-        accentCalc: null,
-        accentOverlay: null,
+        // Mode Accents
+        accentEditMode: null,
+        accentInsertMode: null,
+        accentCommandMode: null,
 
         // Interactive
         focusRing: null,

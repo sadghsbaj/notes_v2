@@ -3,7 +3,7 @@ import { themeContract } from "../contract.css";
 
 /**
  * Dark Theme
- * Zinc monotone dark base (NOT blue tinted!) with same vibrant accents
+ * Zinc monotone dark base (NOT blue tinted!) with mode accents
  */
 
 // Shadow color for dark mode (darker/more transparent shadows)
@@ -25,13 +25,10 @@ export const darkTheme = createTheme(themeContract, {
         textSecondary: "hsl(240, 4%, 65%)", // zinc-400
         textMuted: "hsl(240, 4%, 46%)", // zinc-600
 
-        // Accents (Mode Badges) - Same as light, maybe slightly brighter
-        accentEdit: "hsl(217, 91%, 65%)", // blue-400
-        accentInsert: "hsl(142, 71%, 50%)", // green-400
-        accentPage: "hsl(262, 83%, 63%)", // purple-400
-        accentFile: "hsl(25, 95%, 58%)", // orange-400
-        accentCalc: "hsl(189, 94%, 48%)", // cyan-400
-        accentOverlay: "hsl(330, 81%, 65%)", // pink-400
+        // Mode Accents (slightly brighter for dark mode)
+        accentEditMode: "hsl(217, 91%, 65%)", // blue-400
+        accentInsertMode: "hsl(142, 71%, 50%)", // green-400
+        accentCommandMode: "hsl(239, 84%, 72%)", // indigo-400
 
         // Interactive
         focusRing: "hsl(217, 91%, 65%)", // blue-400

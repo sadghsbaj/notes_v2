@@ -1,11 +1,18 @@
-import { lightTheme } from "@theme/colors/light.css";
-import { appContainer } from "./App.css";
+/**
+ * App – Root component
+ */
+
+import { AppShell, PageCanvas } from "@features/shell";
 
 export function App() {
     return (
-        <div class={`${lightTheme} ${appContainer}`}>
-            <h1>notes_v2</h1>
-            <p>Solid + Vanilla Extract + Geist</p>
-        </div>
+        <AppShell>
+            <PageCanvas>
+                <h1>notes_v2</h1>
+                <p>
+                    Press <kbd>i</kbd> for Insert, <kbd>e</kbd> for Edit, <kbd>Escape</kbd> for Normal
+                </p>
+            </PageCanvas>
+        </AppShell>
     );
 }
