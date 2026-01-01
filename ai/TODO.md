@@ -92,9 +92,9 @@ CLI ist das primäre Interface – fertig implementiert.
 - [x] **Param Types vereinfachen** – ParamDefinition vs ParamRuntime klären ✅
   - `ParamDefinition` entfernt (war redundant zu `ParamRuntime`)
   - Nur noch zwei Types: `Param` (Zod) und `ParamRuntime` (mit Funktionen)
-- [ ] **Help Tooltip Positioning** – Dynamische Charakterbreite statt 4px magic number
-  - Bei verschiedenen DPI/Fonts könnte 4px falsch sein
-  - `charWidth = measureRef.offsetWidth / textLength`
+- [x] **Help Tooltip Positioning** – Dynamische Charakterbreite statt 4px magic number ✅
+  - Misst jetzt die tatsächliche `?` Zeichenbreite
+  - Berechnet exakte Mitte: `widthWithQuestion - questionMarkWidth / 2`
 
 ---
 
