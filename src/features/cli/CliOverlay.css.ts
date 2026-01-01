@@ -194,8 +194,7 @@ export const errorMessage = style({
 export const helpTooltip = style({
     position: "absolute",
     bottom: "calc(100% + 8px)",
-    left: "50%",
-    transform: "translateX(-50%)",
+    // left is set dynamically via style prop
     display: "flex",
     gap: spacing.xs,
     backgroundColor: themeContract.colors.surfaceElevated,

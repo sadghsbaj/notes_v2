@@ -34,6 +34,13 @@ function findParamMatch(input: string, options: string[]): { value: string; isPr
 
     const inputLower = input.toLowerCase();
 
+    // Check for exact match - no completion needed
+    for (const opt of options) {
+        if (opt.toLowerCase() === inputLower) {
+            return null;
+        }
+    }
+
     // First: exact prefix match
     for (const opt of options) {
         const optLower = opt.toLowerCase();
