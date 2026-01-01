@@ -20,8 +20,6 @@
 **Ziel:** Die App läuft als Android-App (noch ohne native Plugins).
 
 - [ ] **Capacitor Init**
-    - `npm install @capacitor/core @capacitor/cli @capacitor/android`.
-    - `npx cap init`.
 - [ ] **Android Project Structure**
     - Ordner-Struktur für Android-Builds aufsetzen.
     - Erste APK bauen und auf Tablet testen (Hello World Level).

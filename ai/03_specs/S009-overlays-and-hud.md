@@ -27,9 +27,9 @@ Diese Spec sammelt alle Overlay-Typen + HUD-Elemente.
 
 ### 1. Mode Indicator (immer sichtbar)
 
-- **Position**: Floating Badge rechts unten.
-- **Display**: Icon + Buchstabe (E/I/P/F/C/O).
-- **Styling**: Translucent, minimale Größe.
+- **Position**: Floating Badge links unten.
+- **Display**: Mode Label.
+- **Styling**: Translucent, Bunt.
 
 ### 2. Jump Overlay (edit → overlay mode)
 
@@ -44,22 +44,11 @@ Diese Spec sammelt alle Overlay-Typen + HUD-Elemente.
 - **Display**: Zentral, "Detail View" / "125%".
 - **Auto-Fade**: 500ms.
 
-### 4. Ghost-Text (parameter input)
-
-- **Trigger**: Action in Sub-Mode (S002).
-- **Display**: Rechts unten (nähe Mode Indicator).
-- **Content**: Parameter Defaults/Eingabe.
-
-### 5. Styling Input (edit mode)
+### 4. Styling Input (edit mode)
 
 - **Trigger**: Styling-Hotkey auf Block (S006).
 - **Display**: Floating Input (Tailwind-Klassen).
 - **Exit**: Enter/Esc.
-
-### 6. Notification Toast (actions feedback)
-
-- **Trigger**: Action erfolgreich (z.B. "3 Pages added").
-- **Display**: Oben rechts, auto-fade (2s).
 
 ## HUD-Elemente (optional, später)
 

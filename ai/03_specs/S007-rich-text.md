@@ -56,7 +56,6 @@ Nur **aktiver Block** rendert Tiptap-Instanz (Performance), Rest = static HTML.
 
 - Ctrl+B: Bold.
 - Ctrl+I: Italic.
-- Ctrl+K: Link.
 - `/`: Slash-Menu für Node-Insertion (später).
 
 ## Performance
@@ -72,8 +71,3 @@ Nur **aktiver Block** rendert Tiptap-Instanz (Performance), Rest = static HTML.
 - D3: Custom Nodes für Mathe/Diagramme/Bilder (später erweitbar).
 - D4: Hotkeys > Toolbar (keine WYSIWYG-UI).
 - D5: Serialize: Tiptap JSON = Block.data (S006).
-
-## Offene Fragen
-
-- Q1: Slash-Menu: sofort oder später?
-- Q2: Mathe-Node: LaTeX-Support via KaTeX?
