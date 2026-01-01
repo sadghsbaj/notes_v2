@@ -2,11 +2,11 @@
 
 **Status:** draft  
 **Owner:** Colin  
-**Last updated:** 2025-12-31  
+**Last updated:** 2026-01-01  
 **Related:**
 
 - Vision: `../01_project/01_vision.md`
-- Spec: S002 Action System & Ghost Text (planned)
+- Spec: S002 Action System & CLI (planned)
 - Spec: S006 Blocks System
 - Spec: S008 Navigation Model (planned)
 
@@ -14,126 +14,121 @@
 
 ## Kontext
 
-notes_v2 ist keyboard-only für einen Power-User (nur ich). Statt CLI nutzen wir ein **Vim-inspired Mode-System** mit **Sub-Modi** für kategorisierte Actions. Maximale Effizienz durch Muscle Memory, minimale UI.
+notes_v2 ist keyboard-only für einen Power-User. Wir nutzen ein **Vim-inspired Mode-System** (Normal, Edit, Insert) kombiniert mit einer **mächtigen Inline-CLI** (Command Mode) für alle komplexen Operationen. Keine Sub-Modi, keine verschachtelten Menüs.
 
 ## Ziele
 
-- Vim-inspired Multi-Mode System (normal/edit/insert + Sub-Modi).
-- Sub-Modi für kategorisierte Actions (page/file/calc/overlay).
-- Muscle Memory > UI (keine Discoverability nötig).
-- Zero UI-Overhead (Dokument + minimale HUD-Overlays).
+- **Pure Modes**: Nur Normal, Edit, Insert, Command. Keine Sub-Modi.
+- **Advanced Inline CLI**:
+    - Slot-based Input (Command + Args).
+    - Smart Autocomplete (Fuzzy + Prefix-Weighting).
+    - Inline Ghost-Text (Completion vs. Replacement).
+    - Inline Math Calculator.
+- **Zero UI-Overhead**: Alles passiert inline in einer Zeile (HUD).
+- **Muscle Memory**: Konsistente Befehle, schnelle Eingabe.
 
 ## Nicht-Ziele
 
-- CLI / Command Palette.
-- Discoverability / Autocomplete.
-- Key-Sequences (`g g`).
-- Rebindable Keymaps (hardcoded für mich).
+- Verschachtelte Sub-Modi (Page Mode, File Mode etc.).
+- Maus-Interaktion für Commands.
+- Discoverability über Menüs (CLI ist discoverable via Autocomplete).
 
 ## Harte Constraints
 
 - C1: Kein Touch/Maus.
 - C2: WASD = Primary Navigation.
-- C3: Esc = universal "back/exit" (nie wegbindbar).
-- C4: Keine Sequences (schnelles Tippen darf nicht blockieren).
+- C3: Esc = universal "back/exit".
+- C4: CLI muss extrem schnell und responsive sein (Fuzzy Search).
 
 ## Begriffe
 
 - **Main Mode**: normal / edit / insert.
-- **Sub-Mode**: page / file / calc / overlay (temporär innerhalb Main Mode).
-- **Mode Indicator**: Floating HUD rechts unten (viewport-fixed), zeigt aktuellen Mode.
-- **Action**: Ausführbare Operation (Details in S002).
-- **Ghost-Text**: Inline-Feedback für Parameter (Details in S002).
+- **Command Mode**: Temporärer Modus für CLI-Eingabe (getriggert durch `:` oder ähnliches).
+- **Slot**: Ein Segment in der CLI (Slot 0 = Command, Slot 1 = Arg1, etc.).
+- **Ghost-Text**: Inline-Vorschau für Autocomplete oder Parameter-Hilfe.
+- **Fuzzy Search**: Intelligente Suche für Commands (Prefix > Fuzzy).
 
 ## Modi-Hierarchie
 
 ### Main Modes
 
 **normal**:
-- Zweck: Page-Navigation, Zoom, Scroll.
-- Sub-Modi: page, file, calc.
+- Zweck: Navigation (WASD), Zoom, Scroll.
+- Entry zu Command Mode (`:`).
+- Entry zu Edit Mode (`Enter` auf Block).
 
 **edit**:
-- Zweck: Block-Manipulation (Move, Resize, Create, Delete, Style).
-- Sub-Modus: overlay.
+- Zweck: Block-Manipulation (Move, Resize, Style).
+- Entry zu Insert Mode (`i` / `Enter`).
 - Exit: Esc → normal.
 
 **insert**:
-- Zweck: Schreiben in Block (Tiptap aktiv).
+- Zweck: Text-Editing (Tiptap).
 - Exit: Esc → edit.
 
-### Sub-Modes
+### Command Mode (CLI)
 
-**page** (in normal):
-- Zweck: Page-Operationen (Add, Remove, Swap, Rotate, etc.).
-- Exit: Esc (bleibt aktiv bis manual exit).
-
-**file** (in normal):
-- Zweck: File-Operationen (Import, Export, Open, New).
-- Exit: Esc.
-
-**calc** (in normal):
-- Zweck: Calculator (Inline Math, Copy zu Clipboard).
-- Exit: Esc.
-
-**overlay** (in edit):
-- Zweck: Block-Jump/Swap/Format Transfer via IDs (S006).
-- Exit: Esc.
+**command**:
+- Zweck: Ausführen aller komplexen Aktionen (Page add, File save, Config, etc.) und Berechnungen.
+- Trigger: `Ctrl + .` (aus Normal/Edit).
+- UI: Eine Zeile (HUD), kein Dropdown. Erscheint mit einer cleanen Animation (TBD).
+- Features:
+    - **Slot-System**: `[Command] [Arg1] [Arg2] ...` (getrennt durch Space).
+    - **Autocomplete**: Tab-Triggered, Inline Ghost-Text.
+    - **History**: Pfeil Hoch/Runter durch letzte Befehle.
+    - **Math**: Eingabe endet mit `=` → Berechnung.
+- Exit: `Enter` (Execute), `Esc` (Cancel).
 
 ## Mode Transitions
 
 ```
 normal ←→ edit ←→ insert
-  ↓ ↑       ↓ ↑
- page      overlay
- file
- calc
+  ↓        ↓
+  └── command ──┘
 ```
 
-- Sub-Modi bleiben aktiv bis Esc (kein auto-exit).
-- Esc bringt zurück: Sub-Mode → Main-Mode → vorherigen Main-Mode.
+- Command Mode ist von normal und edit erreichbar (`Ctrl + .`).
+- Nach Ausführung (Enter) oder Cancel (Esc) zurück in den vorherigen Mode.
 
 ## Esc Rules
 
 **Esc Priority** (top to bottom):
-1. Overlay offen → schließe Overlay.
-2. Sub-Mode aktiv → exit Sub-Mode.
-3. Insert Mode → edit.
-4. Edit Mode (Selection) → clear Selection.
-5. Edit Mode (keine Selection) → normal.
-6. Normal Mode → noop.
+1. Command Mode aktiv → Cancel & Exit.
+2. Insert Mode → edit.
+3. Edit Mode (Selection) → clear Selection.
+4. Edit Mode (keine Selection) → normal.
+5. Normal Mode → noop.
 
-**Panic Reset** (Esc aus stuck state):
-- **Trigger**: Esc 5× schnell hintereinander (innerhalb ~1 Sekunde).
-- **Effekt**: Schließe alle Overlays, exit alle Sub-Modes, zurück zu normal, clear Selection.
+**Panic Reset**:
+- **Trigger**: Esc 5× schnell.
+- **Effekt**: Reset to Normal, Clear All, Close CLI.
 
-## Mode Indicator
+## Mode Indicator & CLI
 
-- **Position**: Floating Badge rechts unten (viewport-fixed).
-- **Display**: Kleines Icon + Buchstabe (z.B. `E` für edit, `P` für page).
-  - Gilt für alle Modi und Sub-Modi (ein Badge, wechselt Inhalt je nach aktivem Mode).
-- **Styling**: Minimal, translucent, HUD/Cockpit-style.
+- **Position**: Floating HUD (unten mittig oder rechts).
+- **Inhalt**:
+    - Normal/Edit/Insert: Kleiner Indikator (Icon/Text).
+    - Command: Eingabezeile ersetzt Indikator oder erweitert ihn (Animation: TBD).
+- **Ghost-Text**:
+    - Zeigt Autocomplete-Vorschlag (dunkelgrau).
+    - Zeigt Parameter-Namen, wenn im Argument-Slot (fett markiert).
 
 ## Input Pipeline
 
-1. Global `keydown` listener (capture phase).
-2. Normalize KeyStroke (code + modifiers).
-3. Build InputContext (mode, subMode, overlayStack, focusTarget, selection).
-4. Resolve gegen mode-spezifische Keymap (Layering: Overlay > Insert > Sub-Mode > Main-Mode).
-5. Dispatch Action.
+1. Global `keydown`.
+2. Check Mode.
+3. If Command Mode: Route to CLI Engine (Fuzzy Search, Slot Parser).
+4. If Main Mode: Route to Keymap.
 
 ## Entscheidungen
 
-- D1: Modi: normal/edit/insert + page/file/calc/overlay.
-- D2: Sub-Modi bleiben aktiv bis Esc (kein auto-exit).
-- D3: Esc = universal back/exit, Panic Reset = Esc 5× schnell hintereinander.
-- D4: Mode Indicator: Floating Badge rechts unten (Icon + Buchstabe), gilt für alle Modi/Sub-Modi.
-- D5: Calc Mode: Hotkey `c`.
-- D6: Keine konkreten Hotkeys in S001 (allgemeine Spec, Details in Keymap-Spec später).
-- D7: WASD = Primary Navigation.
-- D8: Hardcoded Keymaps (optimiert für mich).
-- D9: Ghost-Text für Parameter-Eingabe wird gebaut (Details in S002).
+- D1: **Keine Sub-Modi**. Alles läuft über die CLI.
+- D2: **Inline CLI**. Keine Listen-Popups, nur Ghost-Text.
+- D3: **Slot-Based**. Leertaste springt zum nächsten Parameter-Slot.
+- D4: **Math Integration**. Rechenoperationen direkt in der CLI (`=` Trigger).
+- D5: **Fuzzy Logic**. Prefixes werden stärker gewichtet als reine Fuzzy-Matches.
+- D6: **Trigger**: `Ctrl + .` öffnet die CLI.
 
 ## Offene Fragen
 
-*Keine offenen Fragen – alle Decisions finalisiert.*
+- Q1: Details zur Animation (Fade/Slide/Expand)?

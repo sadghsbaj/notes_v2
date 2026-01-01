@@ -15,10 +15,10 @@ Regel: Eine Spec = ein Thema (klarer Scope), lieber mehrere Specs statt eine rie
 ### Core / Foundations
 
 - **S001 Input & Modes** (draft)
-  - Ziel: Vim-inspired Multi-Mode System (normal/edit/insert + Sub-Modi), Esc-Rules, Input-Pipeline, Mode Indicator.
+  - Ziel: Vim-inspired Multi-Mode System (Normal/Edit/Insert) + **Advanced Inline CLI** (Command Mode), Esc-Rules, Input-Pipeline.
   
-- **S002 Action System & Parameters** (draft)
-  - Ziel: Action-Registry, Parameter-Eingabe via Ghost-Text, Inline Math (Calc Mode), Undo/Redo.
+- **S002 Action System & Advanced CLI** (draft)
+  - Ziel: Slot-based CLI, Smart Autocomplete (Fuzzy/Prefix), Inline Math, Ghost-Text Feedback.
 
 - **S003 Document Model & Storage** (draft)
   - Ziel: Doc→Pages→Blocks Schema, IDs, Versionierung, lokal-only Persistenz, Assets (PDF), atomic writes.
@@ -45,10 +45,11 @@ Regel: Eine Spec = ein Thema (klarer Scope), lieber mehrere Specs statt eine rie
 - **S009 Overlays & HUD** (draft)
   - Ziel: Overlay-First UI (Mode Indicator, Jump, Zoom, Ghost-Text, Styling, Notifications), HUD/Cockpit-Style.
 
+### Filesystem
+- **S011 Filesystem, Aliases & Smart Navigation** (draft)
+  - Ziel: Floating "LS" Sidebar, CLI-CRUD (`mkdir`, `rm`, `mv`...), Smart Aliases (`@mathe .` → Auto-Date-Folder).
+
 ### Erweiterungen (später)
 
 - **S010 AI-Interactive Pages** (draft)
   - Ziel: WebP → Gemini 3.0 Pro → JSON → Interactive Components, Toggle WebP ↔ AI, CodeMirror JSON-Editor, Solutions-Check.
-
-- S011 Theming & Motion (future)
-  - Ziel: Design Tokens, Dark/Light, Motion Guidelines.
