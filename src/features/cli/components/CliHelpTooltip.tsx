@@ -38,7 +38,11 @@ export function CliHelpTooltip() {
             <span ref={measureRef} class={styles.measureSpan} aria-hidden="true" />
 
             <Show when={ghost().showHelp && options().length > 0}>
-                <div class={styles.helpTooltip} style={{ left: `calc(32px + ${leftPx()}px)` }}>
+                <div
+                    class={styles.helpTooltip}
+                    style={{ left: `calc(32px + ${leftPx()}px)`, transform: "translateX(-50%)" }}
+                >
+                    {" "}
                     <For each={options()}>{(option) => <span class={styles.helpOption}>{option}</span>}</For>
                 </div>
             </Show>
