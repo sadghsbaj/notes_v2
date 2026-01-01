@@ -24,6 +24,15 @@ Read `03_specs/README.md` for an overview of feature specs.
 
 **`TODO.md`** contains the active task list. Check this for what to work on.
 
+## Capacitor / Android Development
+
+`scripts/` contains helper scripts for Android development:
+- `dev.sh` – Start dev server with hot reload on tablet
+- `deploy.sh` – Build APK, install and launch on device
+- `logs.sh` – Stream filtered app logs
+
+See `scripts/README.md` for details.
+
 ## Reference Docs
 
 `docs/` contains external library documentation (SolidJS, Vanilla Extract, Capacitor, Tiptap).  

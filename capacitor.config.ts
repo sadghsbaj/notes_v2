@@ -7,17 +7,16 @@ const config: CapacitorConfig = {
 
     // Android specific
     android: {
-        // Build flavor
         buildOptions: {
             releaseType: "APK",
         },
     },
 
-    // Server config for dev
+    // Dev server for hot reload on device
+    // Use with: ./scripts/dev.sh
     server: {
-        // For live reload during development (optional)
-        // url: "http://192.168.178.97:3000",
-        // cleartext: true,
+        url: "http://localhost:3000",
+        cleartext: true,
     },
 };
 

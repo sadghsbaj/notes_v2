@@ -21,7 +21,16 @@ dist-ssr
 *.sln
 *.sw?
 
-# Capacitor
-.capacitor
-android
+# Capacitor - iOS (not used)
 ios
+
+# Android - Build artifacts only (keep source for Kotlin plugins)
+android/.gradle/
+android/build/
+android/app/build/
+android/capacitor-android/build/
+android/capacitor-cordova-android-plugins/build/
+android/local.properties
+android/.idea/
+*.apk
+*.aab
