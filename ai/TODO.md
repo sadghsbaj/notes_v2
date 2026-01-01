@@ -80,9 +80,9 @@ CLI ist das primäre Interface – fertig implementiert.
   - Datei ist 274 Zeilen, zu viele Concerns gemischt
   - Neue Datei: `core/cli/completion/param-matcher.ts`
   - Funktionen: `findParamMatch`, `isSimilar`, `getParamOptions`
-- [ ] **GhostText Type Safety** – Discriminated Union verwenden
-  - Aktuell: Alle Felder optional, kann zu Invalid States führen
-  - Ziel: Type-safe per Mode (command-completion, command-replacement, params, none)
+- [x] **GhostText Type Safety** – Discriminated Union verwenden ✅
+  - Refactored: Jeder Mode hat nur seine relevanten Felder
+  - TypeScript erzwingt jetzt Mode-Check vor Zugriff auf mode-spezifische Felder
 - [ ] **Number Parsing Deduplizierung** – Normalisierung nicht doppelt machen
   - Validator + Executor machen beide `replace(",", ".")`
   - ValidationResult sollte normalisierten Wert zurückgeben

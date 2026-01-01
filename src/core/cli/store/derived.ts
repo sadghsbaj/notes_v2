@@ -106,21 +106,11 @@ export function createCliDerivedState(state: () => CliState) {
                 return {
                     mode: "command-completion",
                     commandText: best.matchedKey.slice(cmd.length),
-                    activeParamIndex: null,
-                    paramNames: [],
-                    paramCompletionText: "",
-                    paramReplacementText: "",
-                    showHelp: false,
                 };
             }
             return {
                 mode: "command-replacement",
                 commandText: best.matchedKey,
-                activeParamIndex: null,
-                paramNames: [],
-                paramCompletionText: "",
-                paramReplacementText: "",
-                showHelp: false,
             };
         }
 
@@ -130,39 +120,36 @@ export function createCliDerivedState(state: () => CliState) {
             const paramNames = action.params.map((p) => (p.optional ? `[${p.name}]` : p.name));
             const activeIdx = Math.min(argIdx, action.params.length - 1);
 
-            // Base params result
-            const result: GhostText = {
-                mode: "params",
-                commandText: "",
-                activeParamIndex: activeIdx,
-                paramNames,
-                paramCompletionText: "",
-                paramReplacementText: "",
-                showHelp: false,
-                help: param?.help,
-            };
+            let paramCompletionText = "";
+            let paramReplacementText = "";
+            let showHelp = false;
 
             // Check for help request ("?")
             if (argValue === "?") {
-                result.showHelp = true;
-                return result;
-            }
-
-            // Check for param completion/replacement
-            if (param && argValue !== "") {
+                showHelp = true;
+            } else if (param && argValue !== "") {
+                // Check for param completion/replacement
                 const options = getParamOptions(param);
                 const match = findParamMatch(argValue, options);
 
                 if (match) {
                     if (match.isPrefix) {
-                        result.paramCompletionText = match.value.slice(argValue.length);
+                        paramCompletionText = match.value.slice(argValue.length);
                     } else {
-                        result.paramReplacementText = match.value;
+                        paramReplacementText = match.value;
                     }
                 }
             }
 
-            return result;
+            return {
+                mode: "params",
+                activeParamIndex: activeIdx,
+                paramNames,
+                paramCompletionText,
+                paramReplacementText,
+                showHelp,
+                help: param?.help,
+            };
         }
 
         return emptyGhostText;
