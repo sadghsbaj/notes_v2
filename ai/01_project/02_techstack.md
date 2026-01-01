@@ -64,7 +64,7 @@
 ## AI / Utilities
 
 ### **Gemini SDK** (`@google/generative-ai`)
-- **Warum**: Gemini 2.0 Flash für AI-Interactive Pages (WebP → JSON).
+- **Warum**: Gemini 3.0 Pro für AI-Interactive Pages (WebP → JSON).
 - **Use-Cases**: Document-Parsing, Solutions-Check (S010).
 
 ### **Zod**
@@ -124,7 +124,7 @@
 - **D2**: Vanilla Extract > UnoCSS/Tailwind (Type-Safety, Theme-System).
 - **D3**: Motion One > GSAP (Bundle-Size, ausreichend mächtig).
 - **D4**: Tiptap = einziger Content-Type (keine separaten Block-Types).
-- **D5**: Gemini 2.0 Flash (nicht GPT-4V, günstiger + gut genug).
+- **D5**: Gemini 3.0 Pro (nicht GPT-4V, günstiger + gut genug).
 - **D6**: Zod für Validation (Runtime-Safety).
 - **D7**: CodeMirror 6 für JSON-Editing (Power-User-Feature).
 

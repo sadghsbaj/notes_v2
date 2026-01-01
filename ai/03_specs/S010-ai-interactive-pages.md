@@ -77,7 +77,7 @@ Arbeitsblätter manuell mit Blocks nachbauen = mühsam. **AI-Interactive Pages**
 4. **Loading Overlay**:
    - Spinner + "Analyzing page with Gemini...".
    - Esc → Cancel (stop processing, don't save).
-5. API-Call: WebP (base64) → Gemini 2.0 Flash.
+5. API-Call: WebP (base64) → Gemini 3.0 Pro.
 6. **Retry-Logic**:
    - Auto-Retry bei Network-Error/Überlastung (3× mit Backoff: 1s, 2s, 4s).
    - Bei Final-Failure: "Failed. Retry?" (Manual Retry-Button).
@@ -139,7 +139,7 @@ Output Schema:
 
 ### API Details
 
-- Model: **Gemini 2.0 Flash** (multimodal, gut für Dokumente).
+- Model: **Gemini 3.0 Pro** (multimodal, gut für Dokumente).
 - Input: WebP base64 + Prompt.
 - Output: JSON (structureJson).
 - Timeout: 30s (mit Retry bei Überlastung).
@@ -259,7 +259,7 @@ Page {
 - D1: WebP-Page = Source of Truth, AI-Page = Derived Feature.
 - D2: Zwei separate Pages (linked via IDs), nicht ein Toggle-Feld.
 - D3: Freie Blocks auf AI-Pages (gleiche Flexibilität).
-- D4: Gemini 2.0 Flash (multimodal, Document-Parsing).
+- D4: Gemini 3.0 Pro (multimodal, Document-Parsing).
 - D5: CodeMirror für JSON-Editing (Manual Override).
 - D6: Auto-Retry bei API-Errors (3× mit Backoff).
 - D7: Esc während API-Call → Cancel (don't save).

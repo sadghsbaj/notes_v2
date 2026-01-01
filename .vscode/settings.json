@@ -14,7 +14,16 @@
         "**/bun.lock": true,
         "**/.capacitor": true,
         "**/dist": true,
-        "**/dist-ssr": true
+        "**/dist-ssr": true,
+        // Android build artifacts
+        "android/.gradle": true,
+        "android/build": true,
+        "android/app/build": true,
+        "android/capacitor-android": true,
+        "android/capacitor-cordova-android-plugins": true,
+        "android/gradle": true,
+        "android/gradlew.bat": true,
+        "android/local.properties": true
     },
     // Search
     "search.exclude": {
